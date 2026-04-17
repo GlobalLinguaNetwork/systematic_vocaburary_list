@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>システム英単語 Fundamental 1–90 動詞リスニング (アクセント選択付)</title>
+  <style>
+    :root {
+      --primary-color: #2563eb;
+      --accent-color:  #f59e0b;
+      --bg-color:      #eff6ff;
+      --card-bg:       #ffffff;
+      --text-main:     #1e293b;
+      --text-sub:      #475569;
+      --radius:        16px;
+    }
+
+    body {
+      font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      margin: 0;
+      padding-top: 120px; /* ヘッダーが高くなった分調整 */
+      line-height: 1.6;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.97);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+      z-index: 1000;
+      padding: 6px 0 8px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0 0 2px 0;
+      font-size: 1rem;
+      color: var(--primary-color);
+      letter-spacing: 0.03em;
+    }
+
+    /* ─── コントロール ─── */
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding: 5px 15px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .voice-selector {
+      font-size: 0.8rem;
+      padding: 4px 8px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      background: white;
+      color: var(--text-main);
+    }
+
+    button {
+      border: none;
+      border-radius: 50px;
+      padding: 6px 16px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-play-all { background: var(--primary-color); color: white; }
+    .btn-stop     { background: #ef4444; color: white; }
+    button:hover  { opacity: 0.9; transform: translateY(-1px); }
+
+    .hint-badge {
+      font-size: 0.65rem;
+      color: #94a3b8;
+      text-align: center;
+      display: block;
+      margin: 2px 0 0;
+    }
+
+    /* ─── カード ─── */
+    .container {
+      max-width: 650px;
+      margin: 0 auto;
+      padding: 0 15px 60px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      margin-bottom: 13px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card.playing {
+      border-color: var(--primary-color);
+      background-color: #dbeafe;
+      transform: scale(1.02);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .no {
+      font-size: 0.78rem;
+      color: #64748b;
+      background: #f1f5f9;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+
+    .btn-play-single {
+      background: #f1f5f9;
+      color: var(--primary-color);
+      padding: 5px 11px;
+      font-size: 0.73rem;
+    }
+
+    .headword {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-bottom: 4px;
+      letter-spacing: 0.02em;
+    }
+
+    .en-text {
+      font-size: 0.97rem;
+      font-weight: 400;
+      color: #1e293b;
+      margin: 3px 0;
+      line-height: 1.5;
+    }
+
+    .en-text strong {
+      color: var(--primary-color);
+      border-bottom: 2px solid #bfdbfe;
+      font-weight: 700;
+    }
+
+    .details {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, opacity 0.3s ease;
+      opacity: 0;
+    }
+
+    .card.open .details {
+      max-height: 700px;
+      opacity: 1;
+      margin-top: 13px;
+      padding-top: 13px;
+      border-top: 1px dashed #e2e8f0;
+    }
+
+    .ja-meaning {
+      font-size: 0.98rem;
+      color: var(--primary-color);
+      font-weight: 700;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .translations {
+      background: #f8fafc;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 0.84rem;
+      color: #475569;
+      border-left: 4px solid var(--primary-color);
+    }
+
+    .translations p { margin: 4px 0; line-height: 1.55; }
+    .translations .jp { color: #64748b; font-size: 0.82rem; }
+
+    @media print {
+      header { position: static; box-shadow: none; }
+      body   { padding-top: 0; background: #fff; }
+      .controls, .btn-play-single { display: none; }
+      .card  { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
+      .details { max-height: none !important; opacity: 1 !important; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>シス単 Fundamental — 動詞① (No.1–90)</h1>
+  
+  <div class="controls">
+    <!-- アクセント選択用プルダウン -->
+    <select id="voiceSelect" class="voice-selector">
+      <option value="en-US">🇺🇸 米国英語 (US)</option>
+      <option value="en-GB">🇬🇧 英国英語 (UK)</option>
+      <option value="en-AU">🇦🇺 豪州英語 (AU)</option>
+      <option value="en-NZ">🇳🇿 ニュージーランド英語 (NZ)</option>
+    </select>
+    
+    <button class="btn-play-all" id="playAllBtn"><span>▶</span> 連続再生</button>
+    <button class="btn-stop"     id="stopBtn"   ><span>■</span> 停止</button>
+  </div>
+  <span class="hint-badge">カードをクリックして和訳確認</span>
+</header>
+
+<main class="container" id="card-container"></main>
+
+<script>
+  // データの定義 (省略せずに維持)
+  const data = [
+    { no: "F-001", word: "follow", ja: "～の後に続く、～に従う", examples: [ { en: "She <strong>followed</strong> her friend into the café.", jp: "彼女は友達の後に続いてカフェに入った。" }, { en: "You should <strong>follow</strong> the instructions carefully.", jp: "あなたは指示に従うべきだ。" } ] },
+    { no: "F-002", word: "consider", ja: "～を考慮する", examples: [ { en: "We need to <strong>consider</strong> all possible solutions.", jp: "私たちはすべての可能な解決策を考慮する必要がある。" }, { en: "I am <strong>considering</strong> moving to another city.", jp: "私は別の都市への引っ越しを考えている。" } ] },
+    { no: "F-003", word: "increase", ja: "増える、～を増やす", examples: [ { en: "The population has <strong>increased</strong> significantly.", jp: "人口は大幅に増えた。" }, { en: "We need to <strong>increase</strong> our production capacity.", jp: "私たちは生産能力を増やす必要がある。" } ] },
+    { no: "F-004", word: "expect", ja: "～を予期する", examples: [ { en: "I <strong>expect</strong> that she will be here soon.", jp: "彼女はもうすぐここに来ると予期している。" }, { en: "We <strong>expect</strong> a rise in sales this year.", jp: "今年は売上の増加を予期している。" } ] },
+    { no: "F-005", word: "decide", ja: "～することを決意する", examples: [ { en: "She <strong>decided</strong> to study abroad next year.", jp: "彼女は来年留学することを決意した。" }, { en: "I can't <strong>decide</strong> which laptop to buy.", jp: "どのノートパソコンを買うか決められない。" } ] },
+    { no: "F-006", word: "develop", ja: "発達する、～を発達させる", examples: [ { en: "Children <strong>develop</strong> quickly in their early years.", jp: "子供は幼い頃に急速に発達する。" }, { en: "Scientists are <strong>developing</strong> new technologies.", jp: "科学者たちは新しい技術を発達させている。" } ] },
+    { no: "F-007", word: "provide", ja: "～を供給する、与える", examples: [ { en: "The company <strong>provides</strong> free Wi-Fi for its customers.", jp: "その会社は顧客に無料Wi-Fiを提供している。" }, { en: "She <strong>provided</strong> him with useful advice.", jp: "彼女は彼に有益な助言を与えた。" } ] },
+    { no: "F-008", word: "continue", ja: "続く、～を続ける", examples: [ { en: "The rain <strong>continued</strong> all night.", jp: "雨は一晩中降り続いた。" }, { en: "He decided to <strong>continue</strong> his studies in Europe.", jp: "彼はヨーロッパでの研究を続けることを決めた。" } ] },
+    { no: "F-009", word: "include", ja: "～を含む、含める", examples: [ { en: "The price <strong>includes</strong> tax and shipping fees.", jp: "価格には税金と送料が含まれている。" }, { en: "Please <strong>include</strong> your contact information in the application.", jp: "申請書に連絡先情報を含めてください。" } ] },
+    { no: "F-010", word: "remain", ja: "ままでいる", examples: [ { en: "She <strong>remained</strong> calm during the crisis.", jp: "彼女は危機の間も冷静なままでいた。" }, { en: "The house <strong>remains</strong> empty after many years.", jp: "その家は何年も空き家のままだ。" } ] },
+    { no: "F-011", word: "reach", ja: "～に着く、～に達する", examples: [ { en: "We finally <strong>reached</strong> the top of the mountain.", jp: "私たちはついに山頂に到達した。" }, { en: "The temperature <strong>reached</strong> 35 degrees yesterday.", jp: "昨日、気温は35度に達した。" } ] },
+    { no: "F-012", word: "allow", ja: "～を許可する", examples: [ { en: "My parents <strong>allowed</strong> me to go out with my friends.", jp: "両親は私が友達と出かけるのを許可した。" }, { en: "The system <strong>allows</strong> users to edit documents.", jp: "そのシステムはユーザーが文書を編集することを許可する。" } ] },
+    { no: "F-013", word: "force", ja: "～を強制する", examples: [ { en: "The storm <strong>forced</strong> us to stay indoors.", jp: "嵐のため、私たちは屋内に留まらざるを得なかった。" }, { en: "The new law <strong>forces</strong> companies to disclose their data usage.", jp: "新法律は企業にデータ使用を開示することを強制する。" } ] },
+    { no: "F-014", word: "offer", ja: "～を申し出る", examples: [ { en: "She <strong>offered</strong> to help with the project.", jp: "彼女はプロジェクトを手伝うことを申し出た。" }, { en: "The company <strong>offers</strong> free training for employees.", jp: "その会社は従業員向けに無料の研修を提供している。" } ] },
+    { no: "F-015", word: "realize", ja: "～を悟る", examples: [ { en: "He suddenly <strong>realized</strong> his mistake.", jp: "彼は突然、自分の誤りに気づいた。" }, { en: "I <strong>realized</strong> that I had left my phone at home.", jp: "私は携帯を家に置き忘れたことに気づいた。" } ] },
+    { no: "F-016", word: "suggest", ja: "～と提案する、～をほのめかす", examples: [ { en: "She <strong>suggested</strong> going to a different restaurant.", jp: "彼女は別のレストランに行くことを提案した。" }, { en: "His silence <strong>suggested</strong> that he was unhappy.", jp: "彼の沈黙は、彼が不満を抱いていることを示唆していた。" } ] },
+    { no: "F-017", word: "require", ja: "～を必要とする", examples: [ { en: "This job <strong>requires</strong> excellent communication skills.", jp: "この仕事には優れたコミュニケーション能力が必要だ。" }, { en: "The rules <strong>require</strong> students to wear uniforms.", jp: "規則では、生徒は制服を着用することが求められている。" } ] },
+    { no: "F-018", word: "worry", ja: "心配する", examples: [ { en: "She <strong>worried</strong> about her upcoming exam.", jp: "彼女は迫りくる試験のことで心配した。" }, { en: "Don't <strong>worry</strong> too much about small mistakes.", jp: "小さなミスをあまり気にしすぎないで。" } ] },
+    { no: "F-019", word: "wonder", ja: "～かと疑問に思う", examples: [ { en: "I <strong>wonder</strong> if he will come to the party.", jp: "彼がパーティーに来るかどうか疑問に思っている。" }, { en: "She <strong>wondered</strong> why he looked so happy.", jp: "彼女はなぜ彼がそんなに幸せそうなのか不思議に思った。" } ] },
+    { no: "F-020", word: "cost", ja: "～を要する", examples: [ { en: "The new smartphone <strong>costs</strong> a lot of money.", jp: "新しいスマートフォンは多額の費用がかかる。" }, { en: "It <strong>cost</strong> me two hours to complete the assignment.", jp: "その課題を終えるのに2時間かかった。" } ] },
+    { no: "F-021", word: "tend", ja: "～する傾向がある、～しがちである", examples: [ { en: "People <strong>tend</strong> to eat more in cold weather.", jp: "人々は寒い天候のときにより多く食べる傾向がある。" }, { en: "She <strong>tends</strong> to forget small details.", jp: "彼女は細かいことを忘れがちだ。" } ] },
+    { no: "F-022", word: "depend", ja: "～に依存する、～しだいで決まる", examples: [ { en: "Children <strong>depend</strong> on their parents for support.", jp: "子供は支援のために両親に依存している。" }, { en: "The success of the project <strong>depends</strong> on good teamwork.", jp: "プロジェクトの成功は良いチームワークにかかっている。" } ] },
+    { no: "F-023", word: "share", ja: "～を分け合う、共有する", examples: [ { en: "We <strong>shared</strong> our food with the others.", jp: "私たちは食べ物を他の人と分け合った。" }, { en: "She <strong>shared</strong> the news with her colleagues.", jp: "彼女はその知らせを同僚と共有した。" } ] },
+    { no: "F-024", word: "demand", ja: "～を要求する", examples: [ { en: "The workers <strong>demanded</strong> higher wages.", jp: "労働者たちはより高い賃金を要求した。" }, { en: "This job <strong>demands</strong> a lot of patience.", jp: "この仕事は多くの忍耐を要求する。" } ] },
+    { no: "F-025", word: "support", ja: "～を支持する", examples: [ { en: "He <strong>supports</strong> his family by working hard.", jp: "彼は懸命に働いて家族を支えている。" }, { en: "Many people <strong>support</strong> the new policy.", jp: "多くの人が新しい政策を支持している。" } ] },
+    { no: "F-026", word: "hire", ja: "～を雇う", examples: [ { en: "The company <strong>hired</strong> five new employees.", jp: "その会社は5人の新しい従業員を雇った。" }, { en: "She was <strong>hired</strong> as a manager last year.", jp: "彼女は昨年マネージャーとして雇われた。" } ] },
+    { no: "F-027", word: "regard", ja: "A を B だと思う、みなす", examples: [ { en: "We <strong>regard</strong> him as an expert in his field.", jp: "私たちは彼をその分野の専門家とみなしている。" }, { en: "She is <strong>regarded</strong> as a talented artist.", jp: "彼女は才能ある芸術家だとみなされている。" } ] },
+    { no: "F-028", word: "base", ja: "A が B に基づいている", examples: [ { en: "His argument is <strong>based</strong> on scientific research.", jp: "彼の議論は科学的研究に基づいている。" }, { en: "The movie is <strong>based</strong> on a true story.", jp: "その映画は実話に基づいている。" } ] },
+    { no: "F-029", word: "improve", ja: "～を向上させる", examples: [ { en: "She wants to <strong>improve</strong> her English skills.", jp: "彼女は英語のスキルを向上させたい。" }, { en: "The company <strong>improved</strong> its customer service.", jp: "その会社は顧客サービスを向上させた。" } ] },
+    { no: "F-030", word: "recognize", ja: "～を認める", examples: [ { en: "He <strong>recognized</strong> his mistake and apologized.", jp: "彼は自分の誤りを認めて謝罪した。" }, { en: "The government <strong>recognized</strong> the need for change.", jp: "政府は変化の必要性を認めた。" } ] },
+    { no: "F-031", word: "notice", ja: "～に気づく", examples: [ { en: "I <strong>noticed</strong> a small mistake in the report.", jp: "私は報告書の小さな誤りに気づいた。" }, { en: "She didn't <strong>notice</strong> that he had already left.", jp: "彼女は彼がすでに去ったことに気づかなかった。" } ] },
+    { no: "F-032", word: "suppose", ja: "～だと思う", examples: [ { en: "I <strong>suppose</strong> he will arrive soon.", jp: "彼はもうすぐ到着すると思う。" }, { en: "<strong>Suppose</strong> we go for a walk instead of staying inside.", jp: "屋内にいる代わりに散歩に行くのはどうだろうか。" } ] },
+    { no: "F-033", word: "raise", ja: "～を上げる、～を育てる", examples: [ { en: "She <strong>raised</strong> her hand to ask a question.", jp: "彼女は質問をするために手を上げた。" }, { en: "They <strong>raised</strong> their children with love and care.", jp: "彼らは愛情と気配りをもって子供を育てた。" } ] },
+    { no: "F-034", word: "prefer", ja: "～をより好む", examples: [ { en: "I <strong>prefer</strong> coffee to tea.", jp: "私は紅茶よりもコーヒーを好む。" }, { en: "She <strong>prefers</strong> staying at home rather than going out.", jp: "彼女は外出するよりも家にいる方を好む。" } ] },
+    { no: "F-035", word: "cheer", ja: "～を励ます", examples: [ { en: "The crowd <strong>cheered</strong> for their favorite team.", jp: "観客はお気に入りのチームを応援した。" }, { en: "Her words <strong>cheered</strong> me up when I was feeling down.", jp: "彼女の言葉は私が落ち込んでいたときに励ましてくれた。" } ] },
+    { no: "F-036", word: "suffer", ja: "～を経験する、受ける、苦しむ", examples: [ { en: "He <strong>suffered</strong> from a severe headache.", jp: "彼はひどい頭痛に苦しんだ。" }, { en: "The city <strong>suffered</strong> damage from the earthquake.", jp: "その都市は地震による被害を受けた。" } ] },
+    { no: "F-037", word: "describe", ja: "～を描写する、～の特徴を説明する", examples: [ { en: "Can you <strong>describe</strong> the suspect's appearance?", jp: "容疑者の特徴を説明できますか？" }, { en: "She <strong>described</strong> the beautiful scenery in her novel.", jp: "彼女は小説の中で美しい景色を描写した。" } ] },
+    { no: "F-038", word: "prevent", ja: "～をさまたげる", examples: [ { en: "Wearing a seatbelt can <strong>prevent</strong> serious injuries.", jp: "シートベルトを着用することで重大なけがを防ぐことができる。" }, { en: "The heavy rain <strong>prevented</strong> us from going outside.", jp: "激しい雨のせいで私たちは外出できなかった。" } ] },
+    { no: "F-039", word: "reduce", ja: "～を減らす", examples: [ { en: "We need to <strong>reduce</strong> the amount of waste.", jp: "私たちは廃棄物の量を減らす必要がある。" }, { en: "Exercising regularly can <strong>reduce</strong> stress.", jp: "定期的な運動はストレスを軽減できる。" } ] },
+    { no: "F-040", word: "mistake", ja: "～を誤解する、まちがえる", examples: [ { en: "I <strong>mistook</strong> him for his brother.", jp: "私は彼を彼の兄と間違えた。" }, { en: "She <strong>mistook</strong> the meeting time and arrived late.", jp: "彼女は会議の時間を間違えて遅れて到着した。" } ] },
+    { no: "F-041", word: "prepare", ja: "～の準備をする", examples: [ { en: "She <strong>prepared</strong> dinner for her family.", jp: "彼女は家族のために夕食を準備した。" }, { en: "He is <strong>preparing</strong> for his final exam.", jp: "彼は期末試験の準備をしている。" } ] },
+    { no: "F-042", word: "encourage", ja: "はげます", examples: [ { en: "His words <strong>encouraged</strong> me to keep going.", jp: "彼の言葉が私を励まし、続ける気にさせた。" }, { en: "The teacher <strong>encouraged</strong> students to express their opinions.", jp: "先生は生徒に意見を表明するよう励ました。" } ] },
+    { no: "F-043", word: "prove", ja: "～だとわかる", examples: [ { en: "The experiment <strong>proved</strong> that the theory was correct.", jp: "その実験は理論が正しいことを証明した。" }, { en: "His hard work <strong>proved</strong> to be successful.", jp: "彼の努力は成功であることがわかった。" } ] },
+    { no: "F-044", word: "treat", ja: "～をあつかう", examples: [ { en: "She <strong>treats</strong> her colleagues with respect.", jp: "彼女は同僚を敬意をもって扱う。" }, { en: "Doctors <strong>treat</strong> patients with care and professionalism.", jp: "医師は患者を慎重かつ専門的に扱う。" } ] },
+    { no: "F-045", word: "establish", ja: "～を設立する、創立する", examples: [ { en: "The company was <strong>established</strong> in 1995.", jp: "その会社は1995年に設立された。" }, { en: "They <strong>established</strong> a new rule for the competition.", jp: "彼らは競技のための新しいルールを制定した。" } ] },
+    { no: "F-046", word: "relate", ja: "関係がある", examples: [ { en: "This issue <strong>relates</strong> to environmental protection.", jp: "この問題は環境保護に関係がある。" }, { en: "I can <strong>relate</strong> to his feelings.", jp: "私は彼の気持ちに共感できる。" } ] },
+    { no: "F-047", word: "compare", ja: "～を比較する、～をたとえる", examples: [ { en: "She <strong>compared</strong> the prices of different brands.", jp: "彼女は異なるブランドの価格を比較した。" }, { en: "He <strong>compared</strong> his childhood memories to a dream.", jp: "彼は子供時代の思い出を夢にたとえた。" } ] },
+    { no: "F-048", word: "spread", ja: "～を広げる；広がる", examples: [ { en: "The news quickly <strong>spread</strong> across the country.", jp: "そのニュースは国中にすぐに広まった。" }, { en: "She <strong>spread</strong> butter on the toast.", jp: "彼女はトーストにバターを塗った。" } ] },
+    { no: "F-049", word: "refer", ja: "～を指示する", examples: [ { en: "The speaker <strong>referred</strong> to a famous quote.", jp: "話し手は有名な引用を指した。" }, { en: "The manual <strong>refers</strong> to different troubleshooting methods.", jp: "そのマニュアルは異なるトラブルシューティング方法を示している。" } ] },
+    { no: "F-050", word: "supply", ja: "～を供給する", examples: [ { en: "The company <strong>supplies</strong> electricity to thousands of homes.", jp: "その会社は何千もの家庭に電力を供給している。" }, { en: "They <strong>supplied</strong> food to the disaster victims.", jp: "彼らは災害の被災者に食料を供給した。" } ] },
+    { no: "F-051", word: "gain", ja: "～を得る", examples: [ { en: "He <strong>gained</strong> a lot of experience through the project.", jp: "彼はそのプロジェクトを通じて多くの経験を得た。" }, { en: "She <strong>gained</strong> confidence after giving the presentation.", jp: "彼女はプレゼンテーションをした後、自信を得た。" } ] },
+    { no: "F-052", word: "destroy", ja: "～を破壊する", examples: [ { en: "The fire <strong>destroyed</strong> the entire building.", jp: "火災が建物全体を破壊した。" }, { en: "Pollution is <strong>destroying</strong> the natural environment.", jp: "汚染が自然環境を破壊している。" } ] },
+    { no: "F-053", word: "apply", ja: "当てはまる、申し込む", examples: [ { en: "This rule <strong>applies</strong> to all employees.", jp: "この規則はすべての従業員に当てはまる。" }, { en: "She <strong>applied</strong> for a job at the company.", jp: "彼女はその会社の仕事に応募した。" } ] },
+    { no: "F-054", word: "seek", ja: "～を求める", examples: [ { en: "He is <strong>seeking</strong> a new challenge in his career.", jp: "彼はキャリアにおける新しい挑戦を求めている。" }, { en: "They <strong>sought</strong> advice from experts.", jp: "彼らは専門家に助言を求めた。" } ] },
+    { no: "F-055", word: "search", ja: "～を捜す", examples: [ { en: "She <strong>searched</strong> for her keys everywhere.", jp: "彼女は鍵をどこでも捜した。" }, { en: "The police are <strong>searching</strong> for the missing person.", jp: "警察は行方不明者を捜索している。" } ] },
+    { no: "F-056", word: "claim", ja: "～と主張する", examples: [ { en: "He <strong>claimed</strong> that he had not seen anything.", jp: "彼は何も見ていないと主張した。" }, { en: "The company <strong>claims</strong> that its products are the best.", jp: "その会社は自社製品が最高だと主張している。" } ] },
+    { no: "F-057", word: "draw", ja: "～を引っぱる", examples: [ { en: "She <strong>drew</strong> the curtains to let in sunlight.", jp: "彼女はカーテンを引いて太陽の光を入れた。" }, { en: "His speech <strong>drew</strong> attention from the audience.", jp: "彼のスピーチは聴衆の注目を集めた。" } ] },
+    { no: "F-058", word: "refuse", ja: "～を断る", examples: [ { en: "He <strong>refused</strong> to accept the gift.", jp: "彼はその贈り物を受け取ることを拒んだ。" }, { en: "She <strong>refused</strong> to answer personal questions.", jp: "彼女は個人的な質問に答えることを拒否した。" } ] },
+    { no: "F-059", word: "respond", ja: "～に返答する", examples: [ { en: "She quickly <strong>responded</strong> to the email.", jp: "彼女はすぐにメールに返信した。" }, { en: "The government <strong>responded</strong> to the crisis with new policies.", jp: "政府は新しい政策でその危機に対応した。" } ] },
+    { no: "F-060", word: "mention", ja: "～について述べる", examples: [ { en: "He <strong>mentioned</strong> the problem in the meeting.", jp: "彼は会議でその問題について述べた。" }, { en: "She <strong>mentioned</strong> that she would be late.", jp: "彼女は遅れることを言及した。" } ] },
+    { no: "F-061", word: "judge", ja: "～を判断する", examples: [ { en: "It is difficult to <strong>judge</strong> someone's character at first glance.", jp: "人の性格を一目で判断するのは難しい。" }, { en: "She <strong>judged</strong> the competition fairly.", jp: "彼女はその競技を公正に審査した。" } ] },
+    { no: "F-062", word: "approach", ja: "～に接近する；～に取り組む；方法", examples: [ { en: "The scientists <strong>approached</strong> the problem in a different way.", jp: "科学者たちはその問題に異なる方法で取り組んだ。" }, { en: "A new <strong>approach</strong> to education is needed.", jp: "教育に対する新しい方法が必要だ。" } ] },
+    { no: "F-063", word: "admit", ja: "～を認める", examples: [ { en: "He <strong>admitted</strong> his mistake and apologized.", jp: "彼は自分の誤りを認めて謝罪した。" }, { en: "She <strong>admitted</strong> that she was wrong.", jp: "彼女は自分が間違っていたことを認めた。" } ] },
+    { no: "F-064", word: "reflect", ja: "～を反映する、～を反射する", examples: [ { en: "The mirror <strong>reflects</strong> light.", jp: "鏡は光を反射する。" }, { en: "His actions <strong>reflect</strong> his personality.", jp: "彼の行動は彼の人格を反映している。" } ] },
+    { no: "F-065", word: "perform", ja: "～を行う、～を遂行する", examples: [ { en: "She <strong>performed</strong> the song beautifully.", jp: "彼女はその歌を美しく演奏した。" }, { en: "The team <strong>performed</strong> well in the competition.", jp: "チームは競技で良い成績を収めた。" } ] },
+    { no: "F-066", word: "bore", ja: "～をうんざりさせる", examples: [ { en: "The long lecture <strong>bored</strong> the students.", jp: "長い講義は生徒たちを退屈させた。" }, { en: "He was <strong>bored</strong> with the repetitive tasks.", jp: "彼は繰り返しの作業に飽きていた。" } ] },
+    { no: "F-067", word: "survive", ja: "生き残る", examples: [ { en: "He <strong>survived</strong> the accident without injuries.", jp: "彼は事故を無傷で生き延びた。" }, { en: "Only a few animals <strong>survived</strong> in the harsh conditions.", jp: "過酷な環境で生き残った動物はほんのわずかだった。" } ] },
+    { no: "F-068", word: "represent", ja: "～を表す", examples: [ { en: "The flag <strong>represents</strong> the country's values.", jp: "その旗は国の価値観を表している。" }, { en: "She <strong>represented</strong> her company at the conference.", jp: "彼女は会議で自社を代表した。" } ] },
+    { no: "F-069", word: "argue", ja: "～と主張する", examples: [ { en: "He <strong>argued</strong> that the new policy was ineffective.", jp: "彼は新しい政策が効果的でないと主張した。" }, { en: "They <strong>argued</strong> about the best way to solve the problem.", jp: "彼らは問題を解決する最善の方法について議論した。" } ] },
+    { no: "F-070", word: "grant", ja: "～を認める、～を与える", examples: [ { en: "The government <strong>granted</strong> him permission to stay.", jp: "政府は彼に滞在許可を与えた。" }, { en: "She <strong>granted</strong> his request for extra time.", jp: "彼女は彼の追加時間の要請を認めた。" } ] },
+    { no: "F-071", word: "indicate", ja: "～を指し示す", examples: [ { en: "The sign <strong>indicates</strong> the direction to the station.", jp: "その標識は駅への方向を指し示している。" }, { en: "Her expression <strong>indicated</strong> that she was unhappy.", jp: "彼女の表情は不満を抱いていることを示していた。" } ] },
+    { no: "F-072", word: "belong", ja: "所属している", examples: [ { en: "He <strong>belongs</strong> to the soccer club at school.", jp: "彼は学校のサッカークラブに所属している。" }, { en: "This book <strong>belongs</strong> to my sister.", jp: "この本は私の妹のものだ。" } ] },
+    { no: "F-073", word: "acquire", ja: "～を習得する", examples: [ { en: "She <strong>acquired</strong> fluency in French after studying abroad.", jp: "彼女は留学後、フランス語の流暢さを習得した。" }, { en: "He <strong>acquired</strong> a lot of knowledge through his work.", jp: "彼は仕事を通じて多くの知識を得た。" } ] },
+    { no: "F-074", word: "reply", ja: "返事をする", examples: [ { en: "She quickly <strong>replied</strong> to his email.", jp: "彼女は彼のメールにすぐ返信した。" }, { en: "He <strong>replied</strong> that he would attend the meeting.", jp: "彼は会議に出席すると返答した。" } ] },
+    { no: "F-075", word: "feed", ja: "～にエサをやる", examples: [ { en: "She <strong>feeds</strong> her dog twice a day.", jp: "彼女は犬に1日2回エサをやる。" }, { en: "Farmers <strong>feed</strong> the cows with fresh grass.", jp: "農家の人々は牛に新鮮な草を与えている。" } ] },
+    { no: "F-076", word: "escape", ja: "逃げる", examples: [ { en: "The prisoner tried to <strong>escape</strong> from jail.", jp: "囚人は刑務所から逃げようとした。" }, { en: "They <strong>escaped</strong> the burning building safely.", jp: "彼らは燃える建物から無事に脱出した。" } ] },
+    { no: "F-077", word: "replace", ja: "～に取って代わる、～を取り替える", examples: [ { en: "She <strong>replaced</strong> the old chair with a new one.", jp: "彼女は古い椅子を新しいものに取り替えた。" }, { en: "Online meetings have <strong>replaced</strong> traditional office gatherings.", jp: "オンライン会議は従来のオフィスでの集まりに取って代わった。" } ] },
+    { no: "F-078", word: "reveal", ja: "～を明らかにする", examples: [ { en: "The investigation <strong>revealed</strong> the truth about the incident.", jp: "その調査は事件の真相を明らかにした。" }, { en: "She <strong>revealed</strong> her plans for the future.", jp: "彼女は自身の将来の計画を明かした。" } ] },
+    { no: "F-079", word: "surround", ja: "～を取り囲む", examples: [ { en: "The house is <strong>surrounded</strong> by trees.", jp: "その家は木々に囲まれている。" }, { en: "Police <strong>surrounded</strong> the building during the operation.", jp: "警察は作戦中に建物を包囲した。" } ] },
+    { no: "F-080", word: "suit", ja: "～に合う", examples: [ { en: "This dress <strong>suits</strong> her perfectly.", jp: "このドレスは彼女にぴったり合っている。" }, { en: "The job <strong>suits</strong> his skills and experience.", jp: "その仕事は彼のスキルと経験に合っている。" } ] },
+    { no: "F-081", word: "estimate", ja: "～を推定する", examples: [ { en: "Scientists <strong>estimate</strong> that the universe is about 13.8 billion years old.", jp: "科学者は宇宙が約138億歳であると推定している。" }, { en: "The company <strong>estimated</strong> the cost of the new project.", jp: "会社は新しいプロジェクトの費用を推定した。" } ] },
+    { no: "F-082", word: "aim", ja: "～をねらう", examples: [ { en: "She <strong>aims</strong> to become a professional singer.", jp: "彼女はプロの歌手になることを目指している。" }, { en: "The program <strong>aims</strong> to improve students' reading skills.", jp: "そのプログラムは生徒の読解力向上を目的としている。" } ] },
+    { no: "F-083", word: "earn", ja: "～をもうける、かせぐ", examples: [ { en: "He <strong>earns</strong> a good salary as an engineer.", jp: "彼はエンジニアとして良い給料を稼いでいる。" }, { en: "She worked hard and <strong>earned</strong> the respect of her colleagues.", jp: "彼女は懸命に働き、同僚の尊敬を得た。" } ] },
+    { no: "F-084", word: "decline", ja: "衰退する、低下する、～を辞退する", examples: [ { en: "The birth rate has <strong>declined</strong> in recent years.", jp: "近年、出生率が低下している。" }, { en: "He <strong>declined</strong> the invitation due to his busy schedule.", jp: "彼は忙しいスケジュールのため招待を辞退した。" } ] },
+    { no: "F-085", word: "afford", ja: "～をする余裕がある", examples: [ { en: "I can't <strong>afford</strong> to buy a new car right now.", jp: "今、新しい車を買う余裕はない。" }, { en: "She can <strong>afford</strong> to travel abroad every year.", jp: "彼女は毎年海外旅行に行く余裕がある。" } ] },
+    { no: "F-086", word: "confuse", ja: "～を当惑させる", examples: [ { en: "His explanation <strong>confused</strong> the audience.", jp: "彼の説明は聴衆を混乱させた。" }, { en: "I was <strong>confused</strong> by the complicated instructions.", jp: "私は複雑な指示に戸惑った。" } ] },
+    { no: "F-087", word: "graduate", ja: "～を卒業する", examples: [ { en: "She <strong>graduated</strong> from university last year.", jp: "彼女は昨年大学を卒業した。" }, { en: "After <strong>graduating</strong> from high school, he started his own business.", jp: "高校を卒業した後、彼は自分のビジネスを始めた。" } ] },
+    { no: "F-088", word: "vary", ja: "変わる、さまざまである", examples: [ { en: "The price <strong>varies</strong> depending on the season.", jp: "価格は季節によって変わる。" }, { en: "Opinions on the topic <strong>vary</strong> among experts.", jp: "その話題に関する専門家の意見はさまざまである。" } ] },
+    { no: "F-089", word: "remove", ja: "～を移す、取り去る", examples: [ { en: "She <strong>removed</strong> the old wallpaper from the wall.", jp: "彼女は壁から古い壁紙を剥がした。" }, { en: "Please <strong>remove</strong> your shoes before entering the house.", jp: "家に入る前に靴を脱いでください。" } ] },
+    { no: "F-090", word: "insist", ja: "～と主張する、言い張る", examples: [ { en: "He <strong>insisted</strong> that he was right.", jp: "彼は自分が正しいと主張した。" }, { en: "She <strong>insisted</strong> on paying for dinner.", jp: "彼女は夕食代を支払うと言い張った。" } ] }
+  ];
+
+  const container = document.getElementById('card-container');
+  data.forEach((item, index) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.id = `card-${index}`;
+    card.onclick = (e) => {
+      if (!e.target.classList.contains('btn-play-single')) {
+        card.classList.toggle('open');
+      }
+    };
+    const exHtml = item.examples.map(ex => `
+      <p><span class="en-sent">${ex.en}</span></p>
+      <p class="jp">${ex.jp}</p>
+    `).join('');
+    card.innerHTML = `
+      <div class="card-header">
+        <span class="no">${item.no}</span>
+        <button class="btn-play-single" onclick="playSingle(${index})">🔊 再生</button>
+      </div>
+      <div class="headword">${item.word}</div>
+      <div class="en-text">${item.examples[0].en}</div>
+      <div class="en-text">${item.examples[1].en}</div>
+      <div class="details">
+        <span class="ja-meaning">${item.ja}</span>
+        <div class="translations">${exHtml}</div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+
+  // ── TTS 設定 ──
+  const synth = window.speechSynthesis;
+  let currentPlayIndex = -1;
+  let isPlayingAll = false;
+  let voices = [];
+
+  // 利用可能な音声リストを取得
+  function loadVoices() {
+    voices = synth.getVoices();
+  }
+  loadVoices();
+  if (speechSynthesis.onvoiceschanged !== undefined) {
+    speechSynthesis.onvoiceschanged = loadVoices;
+  }
+
+  function getSelectedLang() {
+    return document.getElementById('voiceSelect').value;
+  }
+
+  function speakText(text, onEnd) {
+    synth.cancel();
+    const utt = new SpeechSynthesisUtterance(text);
+    const targetLang = getSelectedLang(); // 例: 'en-US'
+    
+    // 指定された言語（アクセント）に一致する音声を探す
+    let selectedVoice = voices.find(v => v.lang.startsWith(targetLang));
+    
+    // 見つからない場合のフォールバック（例：en-NZがない場合、en-GBやen-USを探す）
+    if (!selectedVoice) {
+      selectedVoice = voices.find(v => v.lang.startsWith('en'));
+    }
+    
+    if (selectedVoice) {
+      utt.voice = selectedVoice;
+    }
+    
+    utt.lang = targetLang;
+    utt.rate = 0.88;
+    if (onEnd) utt.onend = onEnd;
+    synth.speak(utt);
+  }
+
+  // 以下、再生制御ロジック
+  function stripHtml(html) {
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    return div.textContent || div.innerText || '';
+  }
+
+  function getSpokenText(item) {
+    return item.word + '. ' + stripHtml(item.examples[0].en) + '. ' + stripHtml(item.examples[1].en) + '.';
+  }
+
+  function updateHighlights(index) {
+    document.querySelectorAll('.card').forEach((card, i) => {
+      if (i === index) {
+        card.classList.add('playing');
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        card.classList.remove('playing');
+      }
+    });
+  }
+
+  function playNext() {
+    if (!isPlayingAll) return;
+    currentPlayIndex++;
+    if (currentPlayIndex >= data.length) { stopAll(); return; }
+    updateHighlights(currentPlayIndex);
+    speakText(getSpokenText(data[currentPlayIndex]), playNext);
+  }
+
+  function stopAll() {
+    isPlayingAll = false;
+    synth.cancel();
+    updateHighlights(-1);
+  }
+
+  window.playSingle = function(index) {
+    stopAll();
+    updateHighlights(index);
+    speakText(getSpokenText(data[index]));
+  };
+
+  document.getElementById('playAllBtn').addEventListener('click', () => {
+    isPlayingAll = true;
+    currentPlayIndex = -1;
+    playNext();
+  });
+
+  document.getElementById('stopBtn').addEventListener('click', stopAll);
+</script>
+</body>
+</html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>シス単 Fundamental 541–600 リスニング</title>
+  <style>
+    :root {
+      --primary-color: #2563eb;
+      --accent-color:  #f59e0b;
+      --bg-color:      #eff6ff;
+      --card-bg:       #ffffff;
+      --text-main:     #1e293b;
+      --text-sub:      #475569;
+      --radius:        16px;
+    }
+
+    body {
+      font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      margin: 0;
+      padding-top: 120px;
+      line-height: 1.6;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.97);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+      z-index: 1000;
+      padding: 6px 0 8px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0 0 2px 0;
+      font-size: 1rem;
+      color: var(--primary-color);
+      letter-spacing: 0.03em;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding: 5px 15px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .voice-selector {
+      font-size: 0.8rem;
+      padding: 4px 8px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      background: white;
+      color: var(--text-main);
+    }
+
+    button {
+      border: none;
+      border-radius: 50px;
+      padding: 6px 16px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-play-all { background: var(--primary-color); color: white; }
+    .btn-stop     { background: #ef4444; color: white; }
+    button:hover  { opacity: 0.9; transform: translateY(-1px); }
+
+    .hint-badge {
+      font-size: 0.65rem;
+      color: #94a3b8;
+      text-align: center;
+      display: block;
+      margin: 2px 0 0;
+    }
+
+    .container {
+      max-width: 650px;
+      margin: 0 auto;
+      padding: 0 15px 60px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      margin-bottom: 13px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.08);
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card.playing {
+      border-color: var(--primary-color);
+      background-color: #dbeafe;
+      transform: scale(1.02);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .no {
+      font-size: 0.78rem;
+      color: #64748b;
+      background: #f1f5f9;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+
+    .btn-play-single {
+      background: #f1f5f9;
+      color: var(--primary-color);
+      padding: 5px 11px;
+      font-size: 0.73rem;
+    }
+
+    .headword {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-bottom: 4px;
+      letter-spacing: 0.02em;
+    }
+
+    .en-text {
+      font-size: 0.97rem;
+      color: #1e293b;
+      margin: 3px 0;
+      line-height: 1.5;
+    }
+
+    .details {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, opacity 0.3s ease;
+      opacity: 0;
+    }
+
+    .card.open .details {
+      max-height: 700px;
+      opacity: 1;
+      margin-top: 13px;
+      padding-top: 13px;
+      border-top: 1px dashed #e2e8f0;
+    }
+
+    .ja-meaning {
+      font-size: 0.98rem;
+      color: var(--primary-color);
+      font-weight: 700;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .translations {
+      background: #f8fafc;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 0.84rem;
+      color: #475569;
+      border-left: 4px solid var(--primary-color);
+    }
+
+    .translations p { margin: 4px 0; line-height: 1.55; }
+    .translations .jp { color: #64748b; font-size: 0.82rem; }
+
+    @media print {
+      header { position: static; box-shadow: none; }
+      body   { padding-top: 0; background: #fff; }
+      .controls, .btn-play-single { display: none; }
+      .card  { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
+      .details { max-height: none !important; opacity: 1 !important; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>シス単 Fundamental — (No.541–600)</h1>
+  
+  <div class="controls">
+    <select id="voiceSelect" class="voice-selector">
+      <option value="en-US">🇺🇸 米国英語 (US)</option>
+      <option value="en-GB">🇬🇧 英国英語 (UK)</option>
+      <option value="en-AU">🇦🇺 豪州英語 (AU)</option>
+      <option value="en-NZ">🇳🇿 ニュージーランド英語 (NZ)</option>
+    </select>
+    
+    <button class="btn-play-all" id="playAllBtn"><span>▶</span> 連続再生</button>
+    <button class="btn-stop"     id="stopBtn"   ><span>■</span> 停止</button>
+  </div>
+  <span class="hint-badge">カードをクリックして和訳・例文訳を確認</span>
+</header>
+
+<main class="container" id="card-container"></main>
+
+<script>
+  const data = [
+    { no: "541", word: "entire", ja: "全、全体の", examples: [{ en: "He spent the entire day studying.", jp: "彼は一日中勉強していた。" }, { en: "The entire team worked hard on the project.", jp: "チーム全員がプロジェクトに懸命に取り組んだ。" }] },
+    { no: "542", word: "favorite", ja: "いちばん好きな", examples: [{ en: "Pizza is my favorite food.", jp: "ピザは私の一番好きな食べ物だ。" }, { en: "She listened to her favorite song.", jp: "彼女はお気に入りの曲を聞いた。" }] },
+    { no: "543", word: "comfortable", ja: "快適な", examples: [{ en: "This chair is very comfortable.", jp: "この椅子はとても快適だ。" }, { en: "She felt comfortable in her new home.", jp: "彼女は新しい家で快適に過ごした。" }] },
+    { no: "544", word: "minor", ja: "小さい、軽微な", examples: [{ en: "The accident caused only minor damage.", jp: "その事故は軽微な損害を引き起こしたに過ぎなかった。" }, { en: "He played a minor role in the film.", jp: "彼は映画で小さな役を演じた。" }] },
+    { no: "545", word: "typical", ja: "典型的な", examples: [{ en: "This is a typical example of traditional architecture.", jp: "これは伝統的建築の典型的な例だ。" }, { en: "She follows a typical morning routine.", jp: "彼女は典型的な朝の習慣に従っている。" }] },
+    { no: "546", word: "ideal", ja: "理想的な", examples: [{ en: "This location is ideal for a vacation.", jp: "この場所は休暇に理想的だ。" }, { en: "He is looking for an ideal solution to the problem.", jp: "彼はその問題の理想的な解決策を探している。" }] },
+    { no: "547", word: "principal", ja: "主要な", examples: [{ en: "The principal reason for the delay was bad weather.", jp: "遅延の主要な理由は悪天候だった。" }, { en: "She is the principal dancer in the ballet company.", jp: "彼女はバレエ団の主要なダンサーだ。" }] },
+    { no: "548", word: "appropriate", ja: "適切な", examples: [{ en: "This dress is appropriate for the occasion.", jp: "このドレスはその場に適している。" }, { en: "He made an appropriate decision.", jp: "彼は適切な決定を下した。" }] },
+    { no: "549", word: "empty", ja: "からの、空の", examples: [{ en: "The bottle is empty.", jp: "そのボトルは空だ。" }, { en: "He felt empty inside after losing the competition.", jp: "彼は大会に負けた後、心が空っぽになったと感じた。" }] },
+    { no: "550", word: "rapid", ja: "急速な", examples: [{ en: "Technology is advancing at a rapid pace.", jp: "技術は急速な速度で進化している。" }, { en: "She made rapid progress in her studies.", jp: "彼女は学習で急速な進歩を遂げた。" }] },
+    { no: "551", word: "mental", ja: "精神の、心の", examples: [{ en: "Mental health is as important as physical health.", jp: "精神の健康は身体の健康と同じくらい重要だ。" }, { en: "He faced a lot of mental stress at work.", jp: "彼は仕事で多くの精神的ストレスに直面した。" }] },
+    { no: "552", word: "excellent", ja: "すばらしい", examples: [{ en: "She did an excellent job on the project.", jp: "彼女はプロジェクトで素晴らしい仕事をした。" }, { en: "The food at this restaurant is excellent.", jp: "このレストランの料理は素晴らしい。" }] },
+    { no: "553", word: "convenient", ja: "都合がいい、便利な", examples: [{ en: "The hotel is in a convenient location near the airport.", jp: "そのホテルは空港の近くにあり便利だ。" }, { en: "Online shopping is convenient for busy people.", jp: "オンラインショッピングは忙しい人にとって便利だ。" }] },
+    { no: "554", word: "potential", ja: "潜在的な、可能性のある", examples: [{ en: "This new technology has great potential for growth.", jp: "この新技術には成長の大きな可能性がある。" }, { en: "She has the potential to become a great leader.", jp: "彼女には優れたリーダーになる潜在能力がある。" }] },
+    { no: "555", word: "financial", ja: "財政的な、金融の", examples: [{ en: "The company is facing financial difficulties.", jp: "その会社は財政的な困難に直面している。" }, { en: "He received financial support for his studies.", jp: "彼は学業のために財政的な支援を受けた。" }] },
+    { no: "556", word: "enormous", ja: "莫大な", examples: [{ en: "The universe is enormously vast and mysterious.", jp: "宇宙は広大で神秘的だ。" }, { en: "She made an enormous effort to succeed.", jp: "彼女は成功するために莫大な努力をした。" }] },
+    { no: "557", word: "rare", ja: "珍しい", examples: [{ en: "This bird species is very rare.", jp: "この鳥の種類は非常に珍しい。" }, { en: "It is rare to see snow in this area.", jp: "この地域で雪を見るのは珍しい。" }] },
+    { no: "558", word: "artificial", ja: "人工の", examples: [{ en: "The artificial flowers look very realistic.", jp: "人工の花はとても本物のように見える。" }, { en: "Artificial intelligence is changing the world.", jp: "人工知能が世界を変えている。" }] },
+    { no: "559", word: "tiny", ja: "ちっちゃな", examples: [{ en: "She found a tiny insect on the leaf.", jp: "彼女は葉の上に小さな昆虫を見つけた。" }, { en: "This town is tiny compared to the big city.", jp: "この町は大都市と比べると小さい。" }] },
+    { no: "560", word: "considerable", ja: "かなりの", examples: [{ en: "The project required a considerable amount of funding.", jp: "そのプロジェクトにはかなりの資金が必要だった。" }, { en: "She gained a considerable amount of experience in her job.", jp: "彼女は仕事でかなりの経験を積んだ。" }] },
+    { no: "561", word: "sensitive", ja: "敏感な", examples: [{ en: "He is very sensitive to criticism.", jp: "彼は批判に非常に敏感だ。" }, { en: "This skin cream is designed for sensitive skin.", jp: "このスキンクリームは敏感肌用に作られている。" }] },
+    { no: "562", word: "intellectual", ja: "知的な", examples: [{ en: "She enjoys intellectual discussions about philosophy.", jp: "彼女は哲学についての知的な議論を楽しむ。" }, { en: "Reading books helps develop intellectual skills.", jp: "本を読んでいることは知的な能力を伸ばすのに役立つ。" }] },
+    { no: "563", word: "thirsty", ja: "のどが渇く", examples: [{ en: "After running, he felt very thirsty.", jp: "走った後、彼はとても喉が渇いた。" }, { en: "Drink some water if you feel thirsty.", jp: "喉が渇いたら水を飲みなさい。" }] },
+    { no: "564", word: "polite", ja: "礼儀正しい", examples: [{ en: "She is always polite to her colleagues.", jp: "彼女はいつも同僚に対して礼儀正しい。" }, { en: "Being polite is important in customer service.", jp: "礼儀正しくあることは顧客サービスにおいて重要だ。" }] },
+    { no: "565", word: "accurate", ja: "正確な", examples: [{ en: "The report provides accurate information.", jp: "その報告書は正確な情報を提供している。" }, { en: "His answer was completely accurate.", jp: "彼の答えは完全に正確だった。" }] },
+    { no: "566", word: "rude", ja: "失礼な", examples: [{ en: "It is rude to interrupt someone while they are speaking.", jp: "誰かが話しているときに遮るのは失礼だ。" }, { en: "He apologized for his rude behavior.", jp: "彼は自分の失礼な態度について謝った。" }] },
+    { no: "567", word: "sufficient", ja: "十分な", examples: [{ en: "We have sufficient food for the trip.", jp: "旅行には十分な食料がある。" }, { en: "She had sufficient time to prepare for the test.", jp: "彼女は試験の準備をするのに十分な時間があった。" }] },
+    { no: "568", word: "urban", ja: "都会の", examples: [{ en: "She prefers living in an urban environment.", jp: "彼女は都会の環境で暮らすのを好む。" }, { en: "Urban areas have more public transportation options.", jp: "都会の地域には公共交通機関の選択肢が多い。" }] },
+    { no: "569", word: "temporary", ja: "一時的な", examples: [{ en: "He found a temporary job during the summer.", jp: "彼は夏の間の一時的な仕事を見つけた。" }, { en: "This solution is only temporary.", jp: "この解決策は一時的なものだ。" }] },
+    { no: "570", word: "primitive", ja: "原始的な", examples: [{ en: "Early humans used primitive tools for hunting.", jp: "初期の人類は狩りのために原始的な道具を使用した。" }, { en: "The village still follows primitive traditions.", jp: "その村は今でも原始的な伝統を守っている。" }] },
+    { no: "571", word: "permanent", ja: "永久の、終身の", examples: [{ en: "He got a permanent job at the company.", jp: "彼はその会社で永久的な職（正社員）を得た。" }, { en: "The damage to the building was permanent.", jp: "その建物への損害は永久的（修復不能）だった。" }] },
+    { no: "572", word: "elderly", ja: "高齢の", examples: [{ en: "She takes care of elderly people at the nursing home.", jp: "彼女は介護施設で高齢者の世話をしている。" }, { en: "The elderly man walked slowly across the street.", jp: "その高齢の男性はゆっくりと通りを歩いた。" }] },
+    { no: "573", word: "severe", ja: "厳しい、深刻な", examples: [{ en: "The winter was extremely severe this year.", jp: "今年の冬は非常に厳しかった。" }, { en: "He faced severe challenges at work.", jp: "彼は仕事で厳しい課題に直面した。" }] },
+    { no: "574", word: "brief", ja: "簡潔な", examples: [{ en: "She gave a brief explanation of the project.", jp: "彼女はプロジェクトについて簡潔に説明した。" }, { en: "His speech was brief but effective.", jp: "彼のスピーチは簡潔だったが効果的だった。" }] },
+    { no: "575", word: "mobile", ja: "流動的な、移動式の", examples: [{ en: "Smartphones make communication more mobile.", jp: "スマートフォンはコミュニケーションをより流動的にする。" }, { en: "He has a mobile lifestyle and travels frequently.", jp: "彼は流動的な生活をしていて、頻繁に旅行する。" }] },
+    { no: "576", word: "latest", ja: "最新の", examples: [{ en: "She bought the latest model of the smartphone.", jp: "彼女は最新のスマートフォンを購入した。" }, { en: "The latest news reports an economic crisis.", jp: "最新のニュースは経済危機を報じている。" }] },
+    { no: "577", word: "military", ja: "軍事的な", examples: [{ en: "He served in the military for ten years.", jp: "彼は 10 年間軍務に就いた。" }, { en: "Military technology is constantly advancing.", jp: "軍事技術は常に進歩している。" }] },
+    { no: "578", word: "strict", ja: "厳しい", examples: [{ en: "The school has strict rules about attendance.", jp: "その学校には出席について厳しいルールがある。" }, { en: "Her parents are very strict about education.", jp: "彼女の両親は教育についてとても厳しい。" }] },
+    { no: "579", word: "solid", ja: "固体の、無垢の", examples: [{ en: "Ice is the solid form of water.", jp: "氷は水の固体の形だ。" }, { en: "The table is made of solid wood.", jp: "そのテーブルは無垢材でできている。" }] },
+    { no: "580", word: "stupid", ja: "ばかな", examples: [{ en: "It was a stupid mistake, but he learned from it.", jp: "それはばかなミスだったが、彼はそこから学んだ。" }, { en: "Don’t say anything stupid in the meeting.", jp: "会議でばかなことを言わないように。" }] },
+    { no: "581", word: "biological", ja: "生物の、生物学的な", examples: [{ en: "She is studying biological sciences.", jp: "彼女は生物科学を学んでいる。" }, { en: "The biological process of growth is fascinating.", jp: "成長の生物学的過程は興味深い。" }] },
+    { no: "582", word: "probably", ja: "おそらく", examples: [{ en: "She will probably arrive late.", jp: "彼女はおそらく遅れて到着するだろう。" }, { en: "It will probably rain tomorrow.", jp: "明日はおそらく雨が降るだろう。" }] },
+    { no: "583", word: "hardly", ja: "ほとんど～ない", examples: [{ en: "He hardly speaks during meetings.", jp: "彼は会議中ほとんど話さない。" }, { en: "I can hardly believe the news.", jp: "私はそのニュースがほとんど信じられない。" }] },
+    { no: "584", word: "immediately", ja: "すぐに", examples: [{ en: "She called him immediately after hearing the news.", jp: "彼女はそのニュースを聞いた直後に彼に電話した。" }, { en: "He needs to see a doctor immediately.", jp: "彼はすぐに医者に診てもらう必要がある。" }] },
+    { no: "585", word: "eventually", ja: "ついに、結局は", examples: [{ en: "He eventually became the CEO of the company.", jp: "彼はついにその会社の CEO になった。" }, { en: "After many failures, she eventually succeeded.", jp: "多くの失敗の後、彼女はついに成功した。" }] },
+    { no: "586", word: "frequently", ja: "しばしば、頻繁に", examples: [{ en: "She travels frequently for work.", jp: "彼女は仕事で頻繁に旅行する。" }, { en: "This website is frequently updated.", jp: "このウェブサイトは頻繁に更新される。" }] },
+    { no: "587", word: "extremely", ja: "非常に", examples: [{ en: "The weather today is extremely hot.", jp: "今日の天気は非常に暑い。" }, { en: "He is extremely talented in mathematics.", jp: "彼は数学に非常に才能がある。" }] },
+    { no: "588", word: "gradually", ja: "だんだん", examples: [{ en: "The temperature is gradually rising.", jp: "気温はだんだん上昇している。" }, { en: "He gradually improved his communication skills.", jp: "彼はだんだんコミュニケーション能力を向上させた。" }] },
+    { no: "589", word: "instantly", ja: "すぐに、即座に", examples: [{ en: "She recognized him instantly.", jp: "彼女は彼をすぐに認識した。" }, { en: "The app provides information instantly.", jp: "そのアプリはすぐに情報を提供する。" }] },
+    { no: "590", word: "nevertheless", ja: "それにもかかわらず", examples: [{ en: "The weather was bad; nevertheless, we went hiking.", jp: "天気は悪かったが、それにもかかわらず私たちはハイキングに行った。" }, { en: "He was tired; nevertheless, he continued working.", jp: "彼は疲れていたが、それにもかかわらず仕事を続けた。" }] },
+    { no: "591", word: "moreover", ja: "その上", examples: [{ en: "She is intelligent; moreover, she is kind.", jp: "彼女は知的である。その上、親切だ。" }, { en: "The project is expensive; moreover, it takes a lot of time.", jp: "そのプロジェクトは費用がかかる。その上、時間もかかる。" }] },
+    { no: "592", word: "relatively", ja: "比較的", examples: [{ en: "This hotel is relatively cheap.", jp: "このホテルは比較的安い。" }, { en: "She is relatively new to the company.", jp: "彼女は比較的最近会社に入った。" }] },
+    { no: "593", word: "apparently", ja: "一見、どうやら～らしい", examples: [{ en: "Apparently, he is not coming to the party.", jp: "どうやら彼はパーティーに来ないようだ。" }, { en: "She was apparently happy with the results.", jp: "彼女は一見、結果に満足しているようだった。" }] },
+    { no: "594", word: "definitely", ja: "絶対、明確に", examples: [{ en: "I will definitely be there on time.", jp: "私は絶対に時間通りにそこにいる。" }, { en: "This is definitely the best choice.", jp: "これは間違いなく最良の選択だ。" }] },
+    { no: "595", word: "largely", ja: "主に、大部分は", examples: [{ en: "The company's success is largely due to its employees.", jp: "その会社の成功は主に従業員のおかげだ。" }, { en: "The weather in this region is largely dry.", jp: "この地域の天候は主に乾燥している。" }] },
+    { no: "596", word: "mostly", ja: "大部分は、たいてい", examples: [{ en: "She is mostly busy with work.", jp: "彼女は大部分の時間を仕事に費やしている。" }, { en: "The book is mostly about history.", jp: "その本の内容は大部分が歴史についてだ。" }] },
+    { no: "597", word: "approximately", ja: "およそ", examples: [{ en: "The trip will take approximately three hours.", jp: "その旅行にはおよそ 3 時間かかる。" }, { en: "There were approximately 100 people at the event.", jp: "そのイベントにはおよそ 100 人の参加者がいた。" }] },
+    { no: "598", word: "overnight", ja: "一晩、一晩中", examples: [{ en: "We stayed overnight at the hotel.", jp: "私たちはそのホテルに一晩泊まった。" }, { en: "The package was delivered overnight.", jp: "その荷物は一晩で届けられた。" }] },
+    { no: "599", word: "accidentally", ja: "偶然、誤って", examples: [{ en: "I accidentally deleted the file.", jp: "私は誤ってそのファイルを削除してしまった。" }, { en: "She met her old friend accidentally at the airport.", jp: "彼女は空港で偶然昔の友人に会った。" }] },
+    { no: "600", word: "despite", ja: "～にもかかわらず", examples: [{ en: "Despite the rain, we went hiking.", jp: "雨にもかかわらず、私たちはハイキングに行った。" }, { en: "He was happy despite his difficulties.", jp: "彼は困難にもかかわらず幸せだった。" }] }
+  ];
+
+  const container = document.getElementById('card-container');
+  data.forEach((item, index) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.id = `card-${index}`;
+    card.onclick = (e) => { if (!e.target.classList.contains('btn-play-single')) card.classList.toggle('open'); };
+    const exHtml = item.examples.map(ex => `<p>${ex.en}</p><p class="jp">${ex.jp}</p>`).join('');
+    card.innerHTML = `
+      <div class="card-header"><span class="no">${item.no}</span><button class="btn-play-single" onclick="playSingle(${index})">🔊 再生</button></div>
+      <div class="headword">${item.word}</div>
+      <div class="en-text">${item.examples[0].en}</div>
+      <div class="en-text">${item.examples[1].en}</div>
+      <div class="details"><span class="ja-meaning">${item.ja}</span><div class="translations">${exHtml}</div></div>
+    `;
+    container.appendChild(card);
+  });
+
+  const synth = window.speechSynthesis;
+  let currentPlayIndex = -1;
+  let isPlayingAll = false;
+  let voices = [];
+  function loadVoices() { voices = synth.getVoices(); }
+  loadVoices();
+  if (speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = loadVoices;
+
+  function speakText(text, onEnd) {
+    synth.cancel();
+    const utt = new SpeechSynthesisUtterance(text);
+    const targetLang = document.getElementById('voiceSelect').value;
+    let v = voices.find(v => v.lang.startsWith(targetLang));
+    if (!v) v = voices.find(v => v.lang.startsWith('en'));
+    if (v) utt.voice = v;
+    utt.lang = targetLang;
+    utt.rate = 0.88;
+    if (onEnd) utt.onend = onEnd;
+    synth.speak(utt);
+  }
+
+  function getSpokenText(item) { return item.word + '. ' + item.examples[0].en + '. ' + item.examples[1].en + '.'; }
+  function updateHighlights(index) {
+    document.querySelectorAll('.card').forEach((card, i) => {
+      card.classList.toggle('playing', i === index);
+      if (i === index) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  }
+  function playNext() {
+    if (!isPlayingAll) return;
+    currentPlayIndex++;
+    if (currentPlayIndex >= data.length) { stopAll(); return; }
+    updateHighlights(currentPlayIndex);
+    speakText(getSpokenText(data[currentPlayIndex]), playNext);
+  }
+  function stopAll() { isPlayingAll = false; synth.cancel(); updateHighlights(-1); }
+  window.playSingle = function(index) { stopAll(); updateHighlights(index); speakText(getSpokenText(data[index])); };
+  document.getElementById('playAllBtn').addEventListener('click', () => { isPlayingAll = true; currentPlayIndex = -1; playNext(); });
+  document.getElementById('stopBtn').addEventListener('click', stopAll);
+</script>
+</body>
+</html>

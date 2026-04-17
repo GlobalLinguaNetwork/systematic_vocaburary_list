@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>シス単 Fundamental 1141–1200 リスニング</title>
+  <style>
+    :root {
+      --primary-color: #2563eb;
+      --accent-color:  #f59e0b;
+      --bg-color:      #eff6ff;
+      --card-bg:       #ffffff;
+      --text-main:     #1e293b;
+      --text-sub:      #475569;
+      --radius:        16px;
+    }
+
+    body {
+      font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      margin: 0;
+      padding-top: 120px;
+      line-height: 1.6;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.97);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+      z-index: 1000;
+      padding: 6px 0 8px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0 0 2px 0;
+      font-size: 1rem;
+      color: var(--primary-color);
+      letter-spacing: 0.03em;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding: 5px 15px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .voice-selector {
+      font-size: 0.8rem;
+      padding: 4px 8px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      background: white;
+      color: var(--text-main);
+    }
+
+    button {
+      border: none;
+      border-radius: 50px;
+      padding: 6px 16px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center; gap: 5px;
+    }
+
+    .btn-play-all { background: var(--primary-color); color: white; }
+    .btn-stop     { background: #ef4444; color: white; }
+    button:hover  { opacity: 0.9; transform: translateY(-1px); }
+
+    .hint-badge {
+      font-size: 0.65rem;
+      color: #94a3b8;
+      text-align: center;
+      display: block;
+      margin: 2px 0 0;
+    }
+
+    .container {
+      max-width: 650px;
+      margin: 0 auto;
+      padding: 0 15px 60px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      margin-bottom: 13px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.08);
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card.playing {
+      border-color: var(--primary-color);
+      background-color: #dbeafe;
+      transform: scale(1.02);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .no {
+      font-size: 0.78rem;
+      color: #64748b;
+      background: #f1f5f9;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+
+    .btn-play-single {
+      background: #f1f5f9;
+      color: var(--primary-color);
+      padding: 5px 11px;
+      font-size: 0.73rem;
+    }
+
+    .headword {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-bottom: 4px;
+      letter-spacing: 0.02em;
+    }
+
+    .en-text {
+      font-size: 0.97rem;
+      color: #1e293b;
+      margin: 3px 0;
+      line-height: 1.5;
+    }
+
+    .details {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, opacity 0.3s ease;
+      opacity: 0;
+    }
+
+    .card.open .details {
+      max-height: 800px;
+      opacity: 1;
+      margin-top: 13px;
+      padding-top: 13px;
+      border-top: 1px dashed #e2e8f0;
+    }
+
+    .ja-meaning {
+      font-size: 0.98rem;
+      color: var(--primary-color);
+      font-weight: 700;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .translations {
+      background: #f8fafc;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 0.84rem;
+      color: #475569;
+      border-left: 4px solid var(--primary-color);
+    }
+
+    .translations p { margin: 4px 0; line-height: 1.55; }
+    .translations .jp { color: #64748b; font-size: 0.82rem; }
+
+    @media print {
+      header { position: static; box-shadow: none; }
+      body   { padding-top: 0; background: #fff; }
+      .controls, .btn-play-single { display: none; }
+      .card  { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
+      .details { max-height: none !important; opacity: 1 !important; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>シス単 Fundamental — (No.1141–1200)</h1>
+  
+  <div class="controls">
+    <select id="voiceSelect" class="voice-selector">
+      <option value="en-US">🇺🇸 米国英語 (US)</option>
+      <option value="en-GB">🇬🇧 英国英語 (UK)</option>
+      <option value="en-AU">🇦🇺 豪州英語 (AU)</option>
+      <option value="en-NZ">🇳🇿 ニュージーランド英語 (NZ)</option>
+    </select>
+    
+    <button class="btn-play-all" id="playAllBtn"><span>▶</span> 連続再生</button>
+    <button class="btn-stop"     id="stopBtn"   ><span>■</span> 停止</button>
+  </div>
+  <span class="hint-badge">カードをクリックして和訳・例文訳を確認</span>
+</header>
+
+<main class="container" id="card-container"></main>
+
+<script>
+  const data = [
+    { no: "1141", word: "stable", ja: "安定した", examples: [{ en: "The economy has been stable for the past year.", jp: "経済は過去 1 年間安定している。" }, { en: "She has a stable job with a good salary.", jp: "彼女は安定した仕事と良い給与を持っている。" }] },
+    { no: "1142", word: "indifferent", ja: "無関心な", examples: [{ en: "He remained indifferent to the debate.", jp: "彼は議論に対して無関心のままだった。" }, { en: "She seemed indifferent to the results.", jp: "彼女は結果に対して無関心のようだった。" }] },
+    { no: "1143", word: "aggressive", ja: "攻撃的な", examples: [{ en: "He adopted an aggressive strategy in business.", jp: "彼はビジネスにおいて攻撃的な戦略を採用した。" }, { en: "The dog became aggressive when it felt threatened.", jp: "その犬は脅威を感じたときに攻撃的になった。" }] },
+    { no: "1144", word: "ultimate", ja: "究極の", examples: [{ en: "Winning the championship was his ultimate goal.", jp: "チャンピオンシップで勝つことが彼の究極の目標だった。" }, { en: "This new technology represents the ultimate innovation.", jp: "この新しい技術は究極の革新を示している。" }] },
+    { no: "1145", word: "shy", ja: "内気な", examples: [{ en: "She is too shy to speak in front of a crowd.", jp: "彼女は人前で話すのが苦手なほど内気だ。" }, { en: "The shy child hid behind his mother.", jp: "その内気な子供は母親の後ろに隠れた。" }] },
+    { no: "1146", word: "solar", ja: "太陽の", examples: [{ en: "The house is powered by solar energy.", jp: "その家は太陽エネルギーで電力を供給されている。" }, { en: "Scientists study the effects of solar radiation.", jp: "科学者たちは太陽放射の影響を研究している。" }] },
+    { no: "1147", word: "profound", ja: "深い、重大な", examples: [{ en: "He had a profound understanding of philosophy.", jp: "彼は哲学に対して深い理解を持っていた。" }, { en: "The movie left a profound impact on the audience.", jp: "その映画は観客に深い印象を残した。" }] },
+    { no: "1148", word: "subtle", ja: "微妙な", examples: [{ en: "There is a subtle difference between the two shades of blue.", jp: "二つの青色の間には微妙な違いがある。" }, { en: "She gave him a subtle hint about the surprise party.", jp: "彼女は彼にサプライズパーティーについての微妙なヒントを与えた。" }] },
+    { no: "1149", word: "conservative", ja: "保守的な", examples: [{ en: "He has a conservative approach to financial investments.", jp: "彼は金融投資に対して保守的なアプローチを取っている。" }, { en: "The country has a conservative political system.", jp: "その国は保守的な政治体制を持っている。" }] },
+    { no: "1150", word: "brave", ja: "勇敢な", examples: [{ en: "The firefighter made a brave rescue during the fire.", jp: "その消防士は火災の中で勇敢な救助を行った。" }, { en: "She was brave enough to speak up against injustice.", jp: "彼女は不正に対して勇敢に意見を述べた。" }] },
+    { no: "1151", word: "intense", ja: "強烈な、激しい", examples: [{ en: "He felt intense pain in his leg after the accident.", jp: "彼は事故の後、足に強烈な痛みを感じた。" }, { en: "The competition was intense among the athletes.", jp: "競技者間の競争は激しかった。" }] },
+    { no: "1152", word: "alcoholic", ja: "アルコールの", examples: [{ en: "The restaurant serves both alcoholic and non-alcoholic drinks.", jp: "レストランはアルコール飲料とノンアルコール飲料の両方を提供している。" }, { en: "He struggled with alcoholic addiction for years.", jp: "彼は何年もアルコール依存と戦っていた。" }] },
+    { no: "1153", word: "manual", ja: "手を使う、手動の", examples: [{ en: "This job requires manual labor.", jp: "この仕事には手作業が必要だ。" }, { en: "She prefers manual sewing over using a machine.", jp: "彼女はミシンよりも手縫いを好む。" }] },
+    { no: "1154", word: "cruel", ja: "残酷な", examples: [{ en: "The dictator was known for his cruel treatment of prisoners.", jp: "その独裁者は囚人への残酷な扱いで知られていた。" }, { en: "It was cruel to mock the child for his mistake.", jp: "その子供のミスを嘲笑するのは残酷だった。" }] },
+    { no: "1155", word: "rational", ja: "理性的な、合理的な", examples: [{ en: "He made a rational decision based on facts.", jp: "彼は事実に基づいて理性的な決定を下した。" }, { en: "It is important to remain rational in difficult situations.", jp: "困難な状況でも理性的でいることが重要だ。" }] },
+    { no: "1156", word: "initial", ja: "最初の", examples: [{ en: "Her initial reaction was surprise.", jp: "彼女の最初の反応は驚きだった。" }, { en: "The initial stages of the project were challenging.", jp: "プロジェクトの最初の段階は困難だった。" }] },
+    { no: "1157", word: "immune", ja: "免疫のある", examples: [{ en: "Regular exercise can strengthen the immune system.", jp: "定期的な運動は免疫システムを強化する。" }, { en: "He is immune to certain diseases due to vaccination.", jp: "彼は予防接種のおかげで特定の病気に免疫がある。" }] },
+    { no: "1158", word: "linguistic", ja: "言語の", examples: [{ en: "She is interested in linguistic studies.", jp: "彼女は言語学研究に関心がある。" }, { en: "Linguistic diversity is important in global communication.", jp: "言語の多様性は国際的なコミュニケーションにおいて重要だ。" }] },
+    { no: "1159", word: "crucial", ja: "重大な、決定的な", examples: [{ en: "Water conservation is crucial for the environment.", jp: "水の保護は環境にとって重大な課題だ。" }, { en: "His role in the project is crucial to its success.", jp: "彼のプロジェクトでの役割は成功にとって重要だ。" }] },
+    { no: "1160", word: "verbal", ja: "言葉による", examples: [{ en: "She gave a verbal agreement to the proposal.", jp: "彼女はその提案に対して言葉による合意を示した。" }, { en: "Verbal communication is essential in teamwork.", jp: "言葉によるコミュニケーションはチームワークに不可欠だ。" }] },
+    { no: "1161", word: "optimistic", ja: "楽観的な", examples: [{ en: "She remains optimistic about the future.", jp: "彼女は未来について楽観的でいる。" }, { en: "He has an optimistic attitude towards challenges.", jp: "彼は困難に対して楽観的な姿勢を持っている。" }] },
+    { no: "1162", word: "flexible", ja: "柔軟な", examples: [{ en: "This schedule is flexible and can be adjusted.", jp: "このスケジュールは柔軟で、調整可能だ。" }, { en: "She is very flexible in her approach to problem-solving.", jp: "彼女は問題解決のアプローチにおいてとても柔軟だ。" }] },
+    { no: "1163", word: "grateful", ja: "感謝している", examples: [{ en: "I am grateful for your support.", jp: "あなたの支援に感謝しています。" }, { en: "She was grateful for the kindness of her friends.", jp: "彼女は友人たちの親切に感謝していた。" }] },
+    { no: "1164", word: "lively", ja: "生き生きとした", examples: [{ en: "The festival had a lively atmosphere.", jp: "その祭りは生き生きとした雰囲気だった。" }, { en: "She has a lively personality that attracts people.", jp: "彼女は人を惹きつける生き生きとした性格をしている。" }] },
+    { no: "1165", word: "overwhelming", ja: "圧倒的な", examples: [{ en: "The support from the community was overwhelming.", jp: "地域の支援は圧倒的だった。" }, { en: "She felt overwhelming joy upon receiving the award.", jp: "彼女は賞を受け取ったとき、圧倒的な喜びを感じた。" }] },
+    { no: "1166", word: "abundant", ja: "豊富な", examples: [{ en: "The forest has an abundant variety of wildlife.", jp: "その森には豊富な種類の野生生物がいる。" }, { en: "There is an abundant supply of clean water in this area.", jp: "この地域には豊富な清潔な水の供給がある。" }] },
+    { no: "1167", word: "selfish", ja: "利己的な", examples: [{ en: "He made a selfish decision without considering others.", jp: "彼は他人を考えずに利己的な決定を下した。" }, { en: "It is important not to be selfish in relationships.", jp: "人間関係では利己的にならないことが重要だ。" }] },
+    { no: "1168", word: "ugly", ja: "みにくい", examples: [{ en: "The building was considered ugly due to its poor design.", jp: "その建物はデザインが悪いため醜いと考えられた。" }, { en: "He made an ugly remark that offended many people.", jp: "彼は多くの人を傷つける醜い発言をした。" }] },
+    { no: "1169", word: "racial", ja: "人種の", examples: [{ en: "The law prohibits racial discrimination.", jp: "その法律は人種差別を禁止している。" }, { en: "There are discussions about racial equality in society.", jp: "社会では人種の平等について議論されている。" }] },
+    { no: "1170", word: "prominent", ja: "有名な、卓越した", examples: [{ en: "She is a prominent scientist in the field of medicine.", jp: "彼女は医学分野で有名な科学者だ。" }, { en: "The building is a prominent landmark in the city.", jp: "その建物は都市の有名なランドマークだ。" }] },
+    { no: "1171", word: "controversial", ja: "物議を呼ぶ", examples: [{ en: "The policy became a controversial issue in the debate.", jp: "その政策は討論で物議を醸す問題となった。" }, { en: "He wrote a controversial book about politics.", jp: "彼は政治に関する物議を呼ぶ本を書いた。" }] },
+    { no: "1172", word: "federal", ja: "連邦の", examples: [{ en: "The federal government announced a new policy.", jp: "連邦政府は新しい政策を発表した。" }, { en: "He works for a federal agency in Washington, D.C.", jp: "彼はワシントン D.C.の連邦機関で働いている。" }] },
+    { no: "1173", word: "ridiculous", ja: "ばかげた", examples: [{ en: "His idea was so ridiculous that no one took it seriously.", jp: "彼の考えはばかげていて、誰も真剣に受け止めなかった。" }, { en: "It is ridiculous to argue over such a small matter.", jp: "そんな些細なことをめぐって議論するのはばかげている。" }] },
+    { no: "1174", word: "imaginary", ja: "架空の", examples: [{ en: "Children often have imaginary friends.", jp: "子供たちはよく架空の友達を持つ。" }, { en: "The story takes place in an imaginary world.", jp: "その物語は架空の世界で展開する。" }] },
+    { no: "1175", word: "harsh", ja: "厳しい、過酷な", examples: [{ en: "The winter was unusually harsh this year.", jp: "今年の冬は異常に厳しかった。" }, { en: "He received harsh criticism for his decision.", jp: "彼はその決定に対して厳しい批判を受けた。" }] },
+    { no: "1176", word: "random", ja: "無作為な", examples: [{ en: "The numbers were chosen at random.", jp: "その数字は無作為に選ばれた。" }, { en: "He made a random guess and got the answer right.", jp: "彼は適当に答えを予測し、正解した。" }] },
+    { no: "1177", word: "adolescent", ja: "思春期の", examples: [{ en: "Adolescent behavior can be unpredictable.", jp: "思春期の行動は予測不可能なことがある。" }, { en: "She works with adolescent students at the school.", jp: "彼女は学校で思春期の学生と一緒に働いている。" }] },
+    { no: "1178", word: "up-to-date", ja: "最新の", examples: [{ en: "She always keeps her knowledge up-to-date.", jp: "彼女は常に最新の知識を維持している。" }, { en: "The website provides up-to-date news and articles.", jp: "そのウェブサイトは最新のニュースや記事を提供している。" }] },
+    { no: "1179", word: "liberal", ja: "自由主義の、寛大な", examples: [{ en: "He holds liberal views on social issues.", jp: "彼は社会問題について自由主義的な見解を持っている。" }, { en: "The university promotes a liberal education approach.", jp: "その大学は自由主義の教育アプローチを推進している。" }] },
+    { no: "1180", word: "prior", ja: "前の、事前の", examples: [{ en: "She had prior experience in marketing.", jp: "彼女はマーケティングの前職経験を持っていた。" }, { en: "Prior notice is required before making changes.", jp: "変更を行う前には事前通知が必要だ。" }] },
+    { no: "1181", word: "moderate", ja: "適度な", examples: [{ en: "She maintains a moderate diet to stay healthy.", jp: "彼女は健康を維持するために適度な食事を心がけている。" }, { en: "The temperature was moderate, not too hot or cold.", jp: "気温は適度で、暑すぎず寒すぎもしなかった。" }] },
+    { no: "1182", word: "fluent", ja: "流ちょうな", examples: [{ en: "She is fluent in three languages.", jp: "彼女は 3 つの言語を流ちょうに話す。" }, { en: "He spoke in fluent French during the meeting.", jp: "彼は会議で流ちょうなフランス語を話した。" }] },
+    { no: "1183", word: "elaborate", ja: "手の込んだ、精巧な", examples: [{ en: "She created an elaborate design for the project.", jp: "彼女はプロジェクトのために手の込んだデザインを作成した。" }, { en: "The plan was so elaborate that it took hours to explain.", jp: "その計画は非常に手の込んだもので、説明に数時間かかった。" }] },
+    { no: "1184", word: "incredible", ja: "信じられない", examples: [{ en: "His performance was incredible!", jp: "彼の演技は信じられないほどすばらしかった！" }, { en: "She had an incredible experience while traveling abroad.", jp: "彼女は海外旅行中に信じられない体験をした。" }] },
+    { no: "1185", word: "radical", ja: "根本的な、急進的な", examples: [{ en: "The company made radical changes to its policies.", jp: "その会社は方針に根本的な変更を加えた。" }, { en: "His ideas are considered too radical for traditional thinkers.", jp: "彼の考えは伝統的な思想家にはあまりにも急進的だと考えられている。" }] },
+    { no: "1186", word: "acid", ja: "酸性の", examples: [{ en: "Lemons have a naturally acidic taste.", jp: "レモンは自然に酸味がある。" }, { en: "Scientists studied the effects of acid rain on forests.", jp: "科学者たちは酸性雨が森林に及ぼす影響を研究した。" }] },
+    { no: "1187", word: "deaf", ja: "耳が不自由な", examples: [{ en: "She learned sign language to communicate with deaf people.", jp: "彼女は耳が不自由な人々とコミュニケーションを取るために手話を学んだ。" }, { en: "The school provides special support for deaf students.", jp: "その学校は耳が不自由な生徒に特別な支援を提供している。" }] },
+    { no: "1188", word: "medieval", ja: "中世の", examples: [{ en: "The castle is a medieval structure built in the 14th century.", jp: "その城は 14 世紀に建てられた中世の建築物だ。" }, { en: "He is fascinated by medieval history and culture.", jp: "彼は中世の歴史と文化に魅了されている。" }] },
+    { no: "1189", word: "ecological", ja: "生態学的な、生態の", examples: [{ en: "Protecting ecological balance is crucial for sustainability.", jp: "生態系のバランスを守ることは持続可能性にとって重要だ。" }, { en: "Scientists study ecological systems to understand nature.", jp: "科学者たちは自然を理解するために生態系を研究している。" }] },
+    { no: "1190", word: "slight", ja: "少しの、わずかな", examples: [{ en: "There was a slight change in the plan.", jp: "計画に少し変更があった。" }, { en: "She felt a slight pain in her back.", jp: "彼女は背中に軽い痛みを感じた。" }] },
+    { no: "1191", word: "ignorant", ja: "無知な", examples: [{ en: "He was ignorant of the local customs.", jp: "彼は現地の習慣について無知だった。" }, { en: "It is important to educate people instead of judging them.", jp: "人々を無知だと判断するのではなく、教育することが重要だ。" }] },
+    { no: "1192", word: "cognitive", ja: "認知の", examples: [{ en: "Cognitive skills develop in early childhood.", jp: "認知能力は幼少期に発達する。" }, { en: "The study focuses on cognitive development in students.", jp: "その研究は学生の認知発達に焦点を当てている。" }] },
+    { no: "1193", word: "absolutely", ja: "絶対に、完全に", examples: [{ en: "She is absolutely right about the situation.", jp: "彼女はその状況について絶対に正しい。" }, { en: "He absolutely refuses to change his mind.", jp: "彼は考えを変えることを絶対に拒否した。" }] },
+    { no: "1194", word: "virtually", ja: "ほとんど、実質的に", examples: [{ en: "The city was virtually empty during the holidays.", jp: "その都市は休日中ほとんど空っぽだった。" }, { en: "He is virtually fluent in Spanish.", jp: "彼はほとんどスペイン語を流ちょうに話せる。" }] },
+    { no: "1195", word: "somewhat", ja: "多少、いくぶん", examples: [{ en: "She was somewhat tired after the long trip.", jp: "彼女は長旅の後、多少疲れていた。" }, { en: "The results were somewhat unexpected.", jp: "その結果は多少予想外だった。" }] },
+    { no: "1196", word: "merely", ja: "単に", examples: [{ en: "He was merely joking, not serious.", jp: "彼は単に冗談を言っていただけで、本気ではなかった。" }, { en: "The change was merely symbolic, with no real impact.", jp: "その変更は単に象徴的なもので、実際の影響はなかった。" }] },
+    { no: "1197", word: "literally", ja: "文字通り", examples: [{ en: "She was literally shaking with excitement.", jp: "彼女は興奮で文字通り震えていた。" }, { en: "The phrase \"it's raining cats and dogs\" is not literal.", jp: "「土砂降り」という表現は文字通りには受け取らない。" }] },
+    { no: "1198", word: "seemingly", ja: "一見、外見上は", examples: [{ en: "He was seemingly calm, but actually very nervous.", jp: "彼は一見落ち着いていたが、実際はとても緊張していた。" }, { en: "The project was seemingly easy, but required planning.", jp: "そのプロジェクトは一見簡単に見えたが、綿密な計画が必要だった。" }] },
+    { no: "1199", word: "regardless", ja: "関係なく", examples: [{ en: "She continued working regardless of the difficulties.", jp: "彼女は困難に関係なく仕事を続けた。" }, { en: "The rule applies to everyone, regardless of background.", jp: "その規則は背景に関係なく、すべての人に適用される。" }] },
+    { no: "1200", word: "thoroughly", ja: "徹底的に", examples: [{ en: "He thoroughly checked the documents for errors.", jp: "彼は誤りがないか書類を徹底的に確認した。" }, { en: "She thoroughly cleaned the house before the guests arrived.", jp: "彼女はゲストが来る前に家を徹底的に掃除した。" }] }
+  ];
+
+  const container = document.getElementById('card-container');
+  data.forEach((item, index) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.id = `card-${index}`;
+    card.onclick = (e) => { if (!e.target.classList.contains('btn-play-single')) card.classList.toggle('open'); };
+    const exHtml = item.examples.map(ex => `<p>${ex.en}</p><p class="jp">${ex.jp}</p>`).join('');
+    card.innerHTML = `
+      <div class="card-header"><span class="no">${item.no}</span><button class="btn-play-single" onclick="playSingle(${index})">🔊 再生</button></div>
+      <div class="headword">${item.word}</div>
+      <div class="en-text">${item.examples[0].en}</div>
+      <div class="en-text">${item.examples[1].en}</div>
+      <div class="details"><span class="ja-meaning">${item.ja}</span><div class="translations">${exHtml}</div></div>
+    `;
+    container.appendChild(card);
+  });
+
+  const synth = window.speechSynthesis;
+  let currentPlayIndex = -1;
+  let isPlayingAll = false;
+  let voices = [];
+  function loadVoices() { voices = synth.getVoices(); }
+  loadVoices();
+  if (speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = loadVoices;
+
+  function speakText(text, onEnd) {
+    synth.cancel();
+    const utt = new SpeechSynthesisUtterance(text);
+    const targetLang = document.getElementById('voiceSelect').value;
+    let v = voices.find(v => v.lang.startsWith(targetLang));
+    if (!v) v = voices.find(v => v.lang.startsWith('en'));
+    if (v) utt.voice = v;
+    utt.lang = targetLang;
+    utt.rate = 0.88;
+    if (onEnd) utt.onend = onEnd;
+    synth.speak(utt);
+  }
+
+  function stripHtml(html) {
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    return div.textContent || div.innerText || '';
+  }
+
+  function getSpokenText(item) {
+    return item.word + '. ' + stripHtml(item.examples[0].en) + '. ' + stripHtml(item.examples[1].en) + '.';
+  }
+
+  function updateHighlights(index) {
+    document.querySelectorAll('.card').forEach((card, i) => {
+      card.classList.toggle('playing', i === index);
+      if (i === index) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  }
+  function playNext() {
+    if (!isPlayingAll) return;
+    currentPlayIndex++;
+    if (currentPlayIndex >= data.length) { stopAll(); return; }
+    updateHighlights(currentPlayIndex);
+    speakText(getSpokenText(data[currentPlayIndex]), playNext);
+  }
+  function stopAll() { isPlayingAll = false; synth.cancel(); updateHighlights(-1); }
+  window.playSingle = function(index) { stopAll(); updateHighlights(index); speakText(getSpokenText(data[index])); };
+  document.getElementById('playAllBtn').addEventListener('click', () => { isPlayingAll = true; currentPlayIndex = -1; playNext(); });
+  document.getElementById('stopBtn').addEventListener('click', stopAll);
+</script>
+</body>
+</html>

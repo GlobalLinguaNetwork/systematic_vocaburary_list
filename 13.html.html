@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>シス単 Fundamental 1051–1140 リスニング</title>
+  <style>
+    :root {
+      --primary-color: #2563eb;
+      --accent-color:  #f59e0b;
+      --bg-color:      #eff6ff;
+      --card-bg:       #ffffff;
+      --text-main:     #1e293b;
+      --text-sub:      #475569;
+      --radius:        16px;
+    }
+
+    body {
+      font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      margin: 0;
+      padding-top: 120px;
+      line-height: 1.6;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.97);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+      z-index: 1000;
+      padding: 6px 0 8px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0 0 2px 0;
+      font-size: 1rem;
+      color: var(--primary-color);
+      letter-spacing: 0.03em;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding: 5px 15px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .voice-selector {
+      font-size: 0.8rem;
+      padding: 4px 8px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      background: white;
+      color: var(--text-main);
+    }
+
+    button {
+      border: none;
+      border-radius: 50px;
+      padding: 6px 16px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-play-all { background: var(--primary-color); color: white; }
+    .btn-stop     { background: #ef4444; color: white; }
+    button:hover  { opacity: 0.9; transform: translateY(-1px); }
+
+    .hint-badge {
+      font-size: 0.65rem;
+      color: #94a3b8;
+      text-align: center;
+      display: block;
+      margin: 2px 0 0;
+    }
+
+    .container {
+      max-width: 650px;
+      margin: 0 auto;
+      padding: 0 15px 60px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      margin-bottom: 13px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.08);
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card.playing {
+      border-color: var(--primary-color);
+      background-color: #dbeafe;
+      transform: scale(1.02);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .no {
+      font-size: 0.78rem;
+      color: #64748b;
+      background: #f1f5f9;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+
+    .btn-play-single {
+      background: #f1f5f9;
+      color: var(--primary-color);
+      padding: 5px 11px;
+      font-size: 0.73rem;
+    }
+
+    .headword {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-bottom: 4px;
+      letter-spacing: 0.02em;
+    }
+
+    .en-text {
+      font-size: 0.97rem;
+      color: #1e293b;
+      margin: 3px 0;
+      line-height: 1.5;
+    }
+
+    .en-text strong {
+      color: var(--primary-color);
+      border-bottom: 2px solid #bfdbfe;
+      font-weight: 700;
+    }
+
+    .details {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, opacity 0.3s ease;
+      opacity: 0;
+    }
+
+    .card.open .details {
+      max-height: 800px;
+      opacity: 1;
+      margin-top: 13px;
+      padding-top: 13px;
+      border-top: 1px dashed #e2e8f0;
+    }
+
+    .ja-meaning {
+      font-size: 0.98rem;
+      color: var(--primary-color);
+      font-weight: 700;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .translations {
+      background: #f8fafc;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 0.84rem;
+      color: #475569;
+      border-left: 4px solid var(--primary-color);
+    }
+
+    .translations p { margin: 4px 0; line-height: 1.55; }
+    .translations .jp { color: #64748b; font-size: 0.82rem; }
+
+    @media print {
+      header { position: static; box-shadow: none; }
+      body   { padding-top: 0; background: #fff; }
+      .controls, .btn-play-single { display: none; }
+      .card  { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
+      .details { max-height: none !important; opacity: 1 !important; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>シス単 Fundamental — (No.1051–1140)</h1>
+  
+  <div class="controls">
+    <select id="voiceSelect" class="voice-selector">
+      <option value="en-US">🇺🇸 米国英語 (US)</option>
+      <option value="en-GB">🇬🇧 英国英語 (UK)</option>
+      <option value="en-AU">🇦🇺 豪州英語 (AU)</option>
+      <option value="en-NZ">🇳🇿 ニュージーランド英語 (NZ)</option>
+    </select>
+    
+    <button class="btn-play-all" id="playAllBtn"><span>▶</span> 連続再生</button>
+    <button class="btn-stop"     id="stopBtn"   ><span>■</span> 停止</button>
+  </div>
+  <span class="hint-badge">カードをクリックして和訳・例文訳を確認</span>
+</header>
+
+<main class="container" id="card-container"></main>
+
+<script>
+  const data = [
+    { no: "1051", word: "organism", ja: "生物", examples: [{ en: "Every <strong>organism</strong> depends on its environment.", jp: "すべての生物は環境に依存している。" }, { en: "Scientists study tiny <strong>organisms</strong> in water.", jp: "科学者は水中の微生物を研究している。" }] },
+    { no: "1052", word: "merchant", ja: "商人", examples: [{ en: "<strong>Merchants</strong> in the market sell a variety of goods.", jp: "市場の商人たちはさまざまな商品を販売している。" }, { en: "He is a successful <strong>merchant</strong> in the textile industry.", jp: "彼は繊維業界の成功した商人だ。" }] },
+    { no: "1053", word: "myth", ja: "神話", examples: [{ en: "Greek <strong>mythology</strong> is full of fascinating myths.", jp: "ギリシャ神話には魅力的な神話が満ちている。" }, { en: "There is a <strong>myth</strong> about a hidden treasure in the mountains.", jp: "山に隠された財宝の神話がある。" }] },
+    { no: "1054", word: "incident", ja: "出来事", examples: [{ en: "The police are investigating the <strong>incident</strong>.", jp: "警察はその出来事を調査している。" }, { en: "The <strong>incident</strong> happened late at night.", jp: "その出来事は深夜に起きた。" }] },
+    { no: "1055", word: "wildlife", ja: "野生生物", examples: [{ en: "National parks protect <strong>wildlife</strong> and their habitats.", jp: "国立公園は野生生物とその生息地を保護している。" }, { en: "She is passionate about <strong>wildlife</strong> conservation.", jp: "彼女は野生生物の保護に情熱を持っている。" }] },
+    { no: "1056", word: "congress", ja: "議会", examples: [{ en: "The <strong>congress</strong> debated the new law.", jp: "議会は新しい法律を審議した。" }, { en: "He was elected to the national <strong>congress</strong>.", jp: "彼は国会議員に選ばれた。" }] },
+    { no: "1057", word: "bay", ja: "湾", examples: [{ en: "The city is located near a beautiful <strong>bay</strong>.", jp: "その都市は美しい湾の近くに位置している。" }, { en: "The boat sailed across the <strong>bay</strong>.", jp: "そのボートは湾を横切って航行した。" }] },
+    { no: "1058", word: "penalty", ja: "刑、罰金", examples: [{ en: "He received a severe <strong>penalty</strong> for his crime.", jp: "彼は犯罪のために厳しい刑を受けた。" }, { en: "The <strong>penalty</strong> for speeding is a fine.", jp: "スピード違反の刑は罰金だ。" }] },
+    { no: "1059", word: "heritage", ja: "遺産", examples: [{ en: "This castle is part of the national <strong>heritage</strong>.", jp: "この城は国の遺産の一部だ。" }, { en: "Cultural <strong>heritage</strong> must be preserved.", jp: "文化遺産は保存されるべきだ。" }] },
+    { no: "1060", word: "diversity", ja: "多様性", examples: [{ en: "Cultural <strong>diversity</strong> enriches society.", jp: "文化的多様性は社会を豊かにする。" }, { en: "The rainforest is home to great <strong>biodiversity</strong>.", jp: "熱帯雨林には驚くほどの生物多様性がある。" }] },
+    { no: "1061", word: "thumb", ja: "親指", examples: [{ en: "She injured her <strong>thumb</strong> while playing basketball.", jp: "彼女はバスケットボールをしているときに親指を痛めた。" }, { en: "He gave a <strong>thumbs-up</strong> to show approval.", jp: "彼は賛成の意を示すために親指を立てた。" }] },
+    { no: "1062", word: "geography", ja: "地理", examples: [{ en: "She is studying <strong>geography</strong> at university.", jp: "彼女は大学で地理を学んでいる。" }, { en: "<strong>Geography</strong> helps us understand different cultures.", jp: "地理は異なる文化を理解するのに役立つ。" }] },
+    { no: "1063", word: "factor", ja: "要因", examples: [{ en: "Many <strong>factors</strong> influence climate change.", jp: "多くの要因が気候変動に影響を与えている。" }, { en: "Diet is an important <strong>factor</strong> in maintaining health.", jp: "食事は健康維持の重要な要因だ。" }] },
+    { no: "1064", word: "discrimination", ja: "差別", examples: [{ en: "The law prohibits <strong>discrimination</strong> based on race.", jp: "法律は人種に基づく差別を禁止している。" }, { en: "She fought against gender <strong>discrimination</strong> in the workplace.", jp: "彼女は職場での性差別に対抗した。" }] },
+    { no: "1065", word: "virus", ja: "ウイルス", examples: [{ en: "A computer <strong>virus</strong> can damage important files.", jp: "コンピューターウイルスは重要なファイルを破壊する可能性がある。" }, { en: "Scientists are developing a vaccine for the <strong>virus</strong>.", jp: "科学者たちはそのウイルスのワクチンを開発している。" }] },
+    { no: "1066", word: "statue", ja: "像", examples: [{ en: "The <strong>statue</strong> of liberty is a famous landmark.", jp: "自由の女神像は有名なランドマークだ。" }, { en: "He admired the ancient <strong>statue</strong> in the museum.", jp: "彼は博物館にある古代の像を鑑賞した。" }] },
+    { no: "1067", word: "priest", ja: "神父、聖職者", examples: [{ en: "The <strong>priest</strong> led the religious ceremony.", jp: "神父は宗教的な儀式を執り行った。" }, { en: "He spoke with the <strong>priest</strong> about spiritual matters.", jp: "彼は神父と精神的な問題について話し合った。" }] },
+    { no: "1068", word: "pioneer", ja: "先駆者", examples: [{ en: "She is a <strong>pioneer</strong> in medical research.", jp: "彼女は医療研究の先駆者だ。" }, { en: "The <strong>pioneers</strong> settled in the new land.", jp: "先駆者たちは新しい土地に定住した。" }] },
+    { no: "1069", word: "trait", ja: "特徴", examples: [{ en: "Honesty is a valuable personality <strong>trait</strong>.", jp: "正直さは価値のある性格の特徴だ。" }, { en: "Each species has unique <strong>traits</strong> that help them survive.", jp: "それぞれの種は生存に役立つ独自の特徴を持っている。" }] },
+    { no: "1070", word: "bond", ja: "きずな", examples: [{ en: "The friendship between them grew into a strong <strong>bond</strong>.", jp: "彼らの友情は強い絆へと成長した。" }, { en: "A <strong>bond</strong> of trust is important in relationships.", jp: "人間関係では信頼の絆が重要だ。" }] },
+    { no: "1071", word: "grocery", ja: "食料品", examples: [{ en: "She bought fresh <strong>groceries</strong> at the market.", jp: "彼女は市場で新鮮な食料品を買った。" }, { en: "The <strong>grocery</strong> store sells organic vegetables.", jp: "その食料品店はオーガニック野菜を販売している。" }] },
+    { no: "1072", word: "secretary", ja: "秘書", examples: [{ en: "The <strong>secretary</strong> organized the meeting schedule.", jp: "秘書は会議のスケジュールを整理した。" }, { en: "She works as a <strong>secretary</strong> in a law firm.", jp: "彼女は法律事務所で秘書として働いている。" }] },
+    { no: "1073", word: "dialect", ja: "方言", examples: [{ en: "She speaks a <strong>dialect</strong> unique to her hometown.", jp: "彼女は故郷特有の方言を話す。" }, { en: "Each region has its own <strong>dialect</strong> and slang.", jp: "それぞれの地域には独自の方言とスラングがある。" }] },
+    { no: "1074", word: "astronomy", ja: "天文学", examples: [{ en: "He is passionate about <strong>astronomy</strong> and studies the stars.", jp: "彼は天文学に情熱を持ち、星を研究している。" }, { en: "<strong>Astronomy</strong> helps us understand the universe.", jp: "天文学は宇宙を理解するのに役立つ。" }] },
+    { no: "1075", word: "youngster", ja: "子供、若者", examples: [{ en: "The <strong>youngsters</strong> played in the park.", jp: "子供たちは公園で遊んだ。" }, { en: "He teaches <strong>youngsters</strong> how to swim.", jp: "彼は子供たちに泳ぎ方を教える。" }] },
+    { no: "1076", word: "substance", ja: "物質", examples: [{ en: "Water is a vital <strong>substance</strong> for life.", jp: "水は生命にとって不可欠な物質だ。" }, { en: "The scientist analyzed the chemical <strong>substance</strong>.", jp: "科学者はその化学物質を分析した。" }] },
+    { no: "1077", word: "finding", ja: "発見、調査結果", examples: [{ en: "The scientists published their latest <strong>findings</strong>.", jp: "科学者たちは最新の発見を発表した。" }, { en: "His <strong>finding</strong> helped solve the mystery.", jp: "彼の発見が謎を解決するのに役立った。" }] },
+    { no: "1078", word: "strategy", ja: "戦略", examples: [{ en: "The company developed a new marketing <strong>strategy</strong>.", jp: "その会社は新しいマーケティング戦略を開発した。" }, { en: "Good <strong>strategy</strong> is essential in business.", jp: "良い戦略はビジネスに不可欠だ。" }] },
+    { no: "1079", word: "lung", ja: "肺", examples: [{ en: "Smoking can damage the <strong>lungs</strong>.", jp: "喫煙は肺を損傷する可能性がある。" }, { en: "The doctor checked his <strong>lung</strong> condition.", jp: "医者は彼の肺の状態を確認した。" }] },
+    { no: "1080", word: "opponent", ja: "敵、相手", examples: [{ en: "He faced a strong <strong>opponent</strong> in the competition.", jp: "彼は競技で強敵と対戦した。" }, { en: "The politician debated with his <strong>opponent</strong>.", jp: "その政治家は対立候補と討論した。" }] },
+    { no: "1081", word: "ritual", ja: "儀式", examples: [{ en: "The wedding ceremony included a traditional <strong>ritual</strong>.", jp: "結婚式には伝統的な儀式が含まれていた。" }, { en: "Many cultures have unique <strong>rituals</strong> for different occasions.", jp: "多くの文化には異なる場面での独自の儀式がある。" }] },
+    { no: "1082", word: "outcome", ja: "結果", examples: [{ en: "The <strong>outcome</strong> of the election surprised everyone.", jp: "選挙の結果は皆を驚かせた。" }, { en: "He was happy with the <strong>outcome</strong> of his hard work.", jp: "彼は自分の努力の結果に満足していた。" }] },
+    { no: "1083", word: "conservation", ja: "環境保護、保存", examples: [{ en: "<strong>Conservation</strong> efforts help protect endangered species.", jp: "環境保護活動は絶滅危惧種を守るのに役立つ。" }, { en: "Water <strong>conservation</strong> is important for sustainable living.", jp: "水の保護は持続可能な生活にとって重要だ。" }] },
+    { no: "1084", word: "mammal", ja: "哺乳類", examples: [{ en: "Humans, dogs, and whales are all <strong>mammals</strong>.", jp: "人間、犬、クジラはすべて哺乳類だ。" }, { en: "<strong>Mammals</strong> nurse their young with milk.", jp: "哺乳類はミルクで子を育てる。" }] },
+    { no: "1085", word: "telescope", ja: "望遠鏡", examples: [{ en: "He used a <strong>telescope</strong> to observe the stars.", jp: "彼は望遠鏡を使って星を観察した。" }, { en: "The <strong>telescope</strong> helped scientists discover new planets.", jp: "望遠鏡は科学者が新しい惑星を発見するのに役立った。" }] },
+    { no: "1086", word: "refugee", ja: "難民", examples: [{ en: "The <strong>refugees</strong> sought safety in a new country.", jp: "難民たちは新しい国で安全を求めた。" }, { en: "Organizations provide aid to <strong>refugees</strong>.", jp: "組織は難民に援助を提供している。" }] },
+    { no: "1087", word: "code", ja: "規則、コード", examples: [{ en: "The school has a strict dress <strong>code</strong>.", jp: "その学校には厳格な服装規則がある。" }, { en: "Computer programmers write <strong>code</strong> to develop software.", jp: "プログラマーはソフトウェアを開発するためにコードを書く。" }] },
+    { no: "1088", word: "flavor", ja: "風味", examples: [{ en: "This soup has a rich <strong>flavor</strong>.", jp: "このスープは豊かな風味がある。" }, { en: "She added spices to enhance the <strong>flavor</strong> of the dish.", jp: "彼女は料理の風味を引き立てるためにスパイスを加えた。" }] },
+    { no: "1089", word: "particle", ja: "粒子", examples: [{ en: "Dust <strong>particles</strong> floated in the sunlight.", jp: "ホコリの粒子が日光の中を漂っていた。" }, { en: "Scientists study subatomic <strong>particles</strong>.", jp: "科学者は素粒子を研究している。" }] },
+    { no: "1090", word: "nursing", ja: "看護", examples: [{ en: "She works in the <strong>nursing</strong> profession.", jp: "彼女は看護職に従事している。" }, { en: "<strong>Nursing</strong> requires patience and compassion.", jp: "看護には忍耐と思いやりが必要だ。" }] },
+    { no: "1091", word: "suicide", ja: "自殺", examples: [{ en: "Preventing <strong>suicide</strong> requires social support.", jp: "自殺を防ぐには社会的支援が必要だ。" }, { en: "The organization provides counseling to prevent <strong>suicide</strong>.", jp: "その組織は自殺防止のためのカウンセリングを提供している。" }] },
+    { no: "1092", word: "habitat", ja: "生息地", examples: [{ en: "Forests are the natural <strong>habitat</strong> of many animals.", jp: "森は多くの動物の自然の生息地だ。" }, { en: "Environmental destruction threatens the <strong>habitats</strong> of wildlife.", jp: "環境破壊は野生生物の生息地を脅かしている。" }] },
+    { no: "1093", word: "bullying", ja: "いじめ", examples: [{ en: "<strong>Bullying</strong> is a serious problem in schools.", jp: "いじめは学校における深刻な問題だ。" }, { en: "She spoke out against <strong>bullying</strong>.", jp: "彼女はいじめに対して声を上げた。" }] },
+    { no: "1094", word: "dinosaur", ja: "恐竜", examples: [{ en: "<strong>Dinosaurs</strong> lived millions of years ago.", jp: "恐竜は何百万年も前に生息していた。" }, { en: "The museum has a huge <strong>dinosaur</strong> skeleton on display.", jp: "その博物館には巨大な恐竜の骨格が展示されている。" }] },
+    { no: "1095", word: "council", ja: "議会、協議会", examples: [{ en: "The city <strong>council</strong> passed a new regulation.", jp: "市議会は新しい条例を可決した。" }, { en: "The <strong>council</strong> discussed community improvements.", jp: "協議会は地域改善について議論した。" }] },
+    { no: "1096", word: "gender", ja: "性別", examples: [{ en: "<strong>Gender</strong> equality is important for a fair society.", jp: "性別の平等は公正な社会にとって重要だ。" }, { en: "The research examines differences in <strong>gender</strong> roles.", jp: "その研究は性別の役割の違いを調査している。" }] },
+    { no: "1097", word: "surgery", ja: "手術", examples: [{ en: "He underwent <strong>surgery</strong> to repair his knee.", jp: "彼は膝を治すために手術を受けた。" }, { en: "Modern <strong>surgery</strong> techniques have improved significantly.", jp: "現代の手術技術は大幅に向上している。" }] },
+    { no: "1098", word: "innovation", ja: "革新", examples: [{ en: "<strong>Innovation</strong> drives progress in technology.", jp: "革新は技術の進歩を促進する。" }, { en: "The company focuses on <strong>innovation</strong> in product design.", jp: "その会社は製品デザインの革新に力を入れている。" }] },
+    { no: "1099", word: "protein", ja: "タンパク質", examples: [{ en: "Eggs are a good source of <strong>protein</strong>.", jp: "卵は良質なタンパク質の供給源だ。" }, { en: "<strong>Protein</strong> is essential for muscle growth.", jp: "タンパク質は筋肉の成長に不可欠だ。" }] },
+    { no: "1100", word: "nutrition", ja: "栄養", examples: [{ en: "Good <strong>nutrition</strong> is important for overall health.", jp: "適切な栄養は健康全般にとって重要だ。" }, { en: "The doctor gave advice on proper <strong>nutrition</strong>.", jp: "医者は適切な栄養についてのアドバイスをした。" }] },
+    { no: "1101", word: "disaster", ja: "災害", examples: [{ en: "The earthquake was a terrible <strong>disaster</strong>.", jp: "その地震は恐ろしい災害だった。" }, { en: "The government prepared for potential natural <strong>disasters</strong>.", jp: "政府は発生しうる自然災害に備えた。" }] },
+    { no: "1102", word: "emission", ja: "排出", examples: [{ en: "Reducing carbon <strong>emissions</strong> is crucial for fighting climate change.", jp: "炭素排出量の削減は気候変動と戦うために重要だ。" }, { en: "The factory was fined for excessive <strong>emissions</strong>.", jp: "その工場は過剰な排出のために罰金を科された。" }] },
+    { no: "1103", word: "ape", ja: "類人猿", examples: [{ en: "Chimpanzees are intelligent <strong>apes</strong>.", jp: "チンパンジーは知能の高い類人猿だ。" }, { en: "Scientists study <strong>apes</strong> to understand human evolution.", jp: "科学者たちは人間の進化を理解するために類人猿を研究している。" }] },
+    { no: "1104", word: "molecule", ja: "分子", examples: [{ en: "Water consists of hydrogen and oxygen <strong>molecules</strong>.", jp: "水は水素と酸素の分子で構成されている。" }, { en: "Chemists analyze <strong>molecular</strong> structures in laboratories.", jp: "化学者たちは研究室で分子構造を分析する。" }] },
+    { no: "1105", word: "sweat", ja: "汗", examples: [{ en: "He was covered in <strong>sweat</strong> after running.", jp: "彼は走った後、汗でびっしょりだった。" }, { en: "She wiped <strong>sweat</strong> from her forehead.", jp: "彼女は額の汗を拭った。" }] },
+    { no: "1106", word: "transplant", ja: "移植", examples: [{ en: "The patient underwent a heart <strong>transplant</strong>.", jp: "その患者は心臓移植を受けた。" }, { en: "Doctors are researching new <strong>transplant</strong> techniques.", jp: "医師たちは新しい移植技術を研究している。" }] },
+    { no: "1107", word: "species", ja: "種", examples: [{ en: "Many <strong>species</strong> are endangered due to deforestation.", jp: "多くの種が森林破壊の影響で絶滅の危機に瀕している。" }, { en: "There are thousands of <strong>species</strong> of insects.", jp: "昆虫には何千もの種が存在する。" }] },
+    { no: "1108", word: "tip", ja: "先、ヒント", examples: [{ en: "The <strong>tip</strong> of the iceberg is just a small part of it.", jp: "氷山の一角はほんの一部分に過ぎない。" }, { en: "She sharpened the <strong>tip</strong> of her pencil.", jp: "彼女は鉛筆の先を削った。" }] },
+    { no: "1109", word: "cattle", ja: "牛", examples: [{ en: "Farmers raise <strong>cattle</strong> for milk and meat.", jp: "農家は乳製品や肉のために牛を飼育する。" }, { en: "A herd of <strong>cattle</strong> grazed in the field.", jp: "牛の群れが草原で草を食べていた。" }] },
+    { no: "1110", word: "density", ja: "密度", examples: [{ en: "The population <strong>density</strong> in cities is increasing.", jp: "都市の人口密度は増加している。" }, { en: "Gold has a high <strong>density</strong> compared to other metals.", jp: "金は他の金属に比べて密度が高い。" }] },
+    { no: "1111", word: "concept", ja: "概念", examples: [{ en: "The <strong>concept</strong> of time fascinates scientists.", jp: "時間の概念は科学者を魅了する。" }, { en: "She explained the <strong>concept</strong> of gravity to the students.", jp: "彼女は生徒たちに重力の概念を説明した。" }] },
+    { no: "1112", word: "pale", ja: "青白い", examples: [{ en: "He looked <strong>pale</strong> because he was feeling sick.", jp: "彼は体調が悪く、青白い顔をしていた。" }, { en: "The morning sky was a <strong>pale</strong> shade of blue.", jp: "朝の空は薄い青色だった。" }] },
+    { no: "1113", word: "precious", ja: "貴重な", examples: [{ en: "This necklace is made of <strong>precious</strong> stones.", jp: "このネックレスは貴重な宝石で作られている。" }, { en: "Time is a <strong>precious</strong> resource.", jp: "時間は貴重な資源だ。" }] },
+    { no: "1114", word: "loyal", ja: "忠実な", examples: [{ en: "He remained <strong>loyal</strong> to his company for many years.", jp: "彼は長年にわたり会社に忠実だった。" }, { en: "Dogs are known for their <strong>loyal</strong> nature.", jp: "犬は忠実な性格で知られている。" }] },
+    { no: "1115", word: "isolated", ja: "孤立している", examples: [{ en: "The village is <strong>isolated</strong> from the city.", jp: "その村は都市から孤立している。" }, { en: "She felt <strong>isolated</strong> after moving to a new country.", jp: "彼女は新しい国に引っ越した後、孤独を感じた。" }] },
+    { no: "1116", word: "generous", ja: "気前のよい", examples: [{ en: "She is very <strong>generous</strong> with her time and money.", jp: "彼女は時間とお金に関してとても気前がよい。" }, { en: "The company made a <strong>generous</strong> donation to charity.", jp: "その会社は慈善団体に気前のよい寄付をした。" }] },
+    { no: "1117", word: "tropical", ja: "熱帯の", examples: [{ en: "The island has a <strong>tropical</strong> climate.", jp: "その島は熱帯気候だ。" }, { en: "<strong>Tropical</strong> fruits such as mangoes grow in warm regions.", jp: "マンゴーなどの熱帯果物は温暖な地域で育つ。" }] },
+    { no: "1118", word: "reluctant", ja: "したがらない", examples: [{ en: "He was <strong>reluctant</strong> to speak in front of the audience.", jp: "彼は観客の前で話すのをためらった。" }, { en: "She was <strong>reluctant</strong> to accept the job offer.", jp: "彼女はその仕事のオファーを受け入れることに消極的だった。" }] },
+    { no: "1119", word: "vague", ja: "漠然とした", examples: [{ en: "His explanation was too <strong>vague</strong> to understand.", jp: "彼の説明は漠然としていて理解しづらかった。" }, { en: "She had a <strong>vague</strong> idea about the project.", jp: "彼女はそのプロジェクトについて漠然とした考えを持っていた。" }] },
+    { no: "1120", word: "vast", ja: "広大な", examples: [{ en: "The ocean is <strong>vast</strong> and mysterious.", jp: "海は広大で神秘的だ。" }, { en: "There is a <strong>vast</strong> difference between the two cultures.", jp: "二つの文化の間には広大な違いがある。" }] },
+    { no: "1121", word: "numerous", ja: "たくさんの", examples: [{ en: "She received <strong>numerous</strong> awards for her achievements.", jp: "彼女は業績に対してたくさんの賞を受け取った。" }, { en: "<strong>Numerous</strong> people attended the event.", jp: "多くの人々がそのイベントに参加した。" }] },
+    { no: "1122", word: "rural", ja: "田舎の", examples: [{ en: "He grew up in a <strong>rural</strong> village.", jp: "彼は田舎の村で育った。" }, { en: "<strong>Rural</strong> areas often have beautiful landscapes.", jp: "田舎の地域には美しい景観が広がっている。" }] },
+    { no: "1123", word: "widespread", ja: "広まっている", examples: [{ en: "The disease became <strong>widespread</strong> across the country.", jp: "その病気は国内に広まった。" }, { en: "There is <strong>widespread</strong> support for the new policy.", jp: "新しい政策には広く支持が集まっている。" }] },
+    { no: "1124", word: "complicated", ja: "複雑な", examples: [{ en: "The instructions were too <strong>complicated</strong> to understand.", jp: "その説明書は複雑すぎて理解できなかった。" }, { en: "Their relationship is <strong>complicated</strong>.", jp: "彼らの関係は複雑だ。" }] },
+    { no: "1125", word: "visible", ja: "目に見える", examples: [{ en: "The stars are clearly <strong>visible</strong> tonight.", jp: "今夜は星がはっきりと見える。" }, { en: "There was <strong>visible</strong> damage to the building after the storm.", jp: "嵐の後、建物には目に見える損傷があった。" }] },
+    { no: "1126", word: "raw", ja: "生の", examples: [{ en: "She prefers eating <strong>raw</strong> vegetables.", jp: "彼女は生の野菜を食べるのが好きだ。" }, { en: "The fish was served <strong>raw</strong> in sushi.", jp: "その魚は寿司で生のまま提供された。" }] },
+    { no: "1127", word: "remote", ja: "へんぴな、遠隔の", examples: [{ en: "The village is in a <strong>remote</strong> area of the country.", jp: "その村は国のへんぴな場所にある。" }, { en: "He works in a <strong>remote</strong> location with limited internet access.", jp: "彼はインターネットアクセスが限られた遠隔地で働いている。" }] },
+    { no: "1128", word: "urgent", ja: "緊急の", examples: [{ en: "She received an <strong>urgent</strong> call from her boss.", jp: "彼女は上司から緊急の電話を受けた。" }, { en: "It is <strong>urgent</strong> to take action against climate change.", jp: "気候変動に対して行動を起こすことは緊急の課題だ。" }] },
+    { no: "1129", word: "silly", ja: "ばかな", examples: [{ en: "She made a <strong>silly</strong> mistake during the test.", jp: "彼女はテスト中にばかなミスをした。" }, { en: "He told a <strong>silly</strong> joke that made everyone laugh.", jp: "彼はばかげたジョークを言ってみんなを笑わせた。" }] },
+    { no: "1130", word: "striking", ja: "いちじるしい、際立った", examples: [{ en: "There is a <strong>striking</strong> difference between the two paintings.", jp: "二つの絵にはいちじるしい違いがある。" }, { en: "Her appearance was <strong>striking</strong> in the bright red dress.", jp: "彼女の姿は鮮やかな赤いドレスで際立っていた。" }] },
+    { no: "1131", word: "adequate", ja: "十分な", examples: [{ en: "The company provides <strong>adequate</strong> training for employees.", jp: "その会社は従業員に十分な研修を提供している。" }, { en: "Make sure to get <strong>adequate</strong> rest before your journey.", jp: "旅行の前に十分な休息を取るようにしなさい。" }] },
+    { no: "1132", word: "extraordinary", ja: "並外れた", examples: [{ en: "She has <strong>extraordinary</strong> talent in music.", jp: "彼女は音楽に並外れた才能を持っている。" }, { en: "It was an <strong>extraordinary</strong> experience to see the northern lights.", jp: "オーロラを見ることは並外れた経験だった。" }] },
+    { no: "1133", word: "odd", ja: "おかしな、奇妙な", examples: [{ en: "It was an <strong>odd</strong> coincidence.", jp: "それは奇妙な偶然だった。" }, { en: "He behaves in an <strong>odd</strong> way sometimes.", jp: "彼は時々おかしな行動をする。" }] },
+    { no: "1134", word: "abstract", ja: "抽象的な", examples: [{ en: "The painting is very <strong>abstract</strong>.", jp: "その絵はとても抽象的だ。" }, { en: "She struggled to understand the <strong>abstract</strong> concept.", jp: "彼女は抽象的な概念を理解するのに苦労した。" }] },
+    { no: "1135", word: "mutual", ja: "相互の", examples: [{ en: "They have <strong>mutual</strong> respect for each other.", jp: "彼らは互いに敬意を持っている。" }, { en: "<strong>Mutual</strong> trust is important in a relationship.", jp: "関係においては相互の信頼が重要だ。" }] },
+    { no: "1136", word: "excessive", ja: "過度の", examples: [{ en: "<strong>Excessive</strong> stress can harm your health.", jp: "過度のストレスは健康に悪影響を与える。" }, { en: "He paid an <strong>excessive</strong> amount for the car.", jp: "彼はその車に過剰な金額を支払った。" }] },
+    { no: "1137", word: "ashamed", ja: "恥ずかしい", examples: [{ en: "She felt <strong>ashamed</strong> of her mistake.", jp: "彼女は自分のミスを恥ずかしく思った。" }, { en: "He was <strong>ashamed</strong> to ask for help.", jp: "彼は助けを求めるのが恥ずかしかった。" }] },
+    { no: "1138", word: "tremendous", ja: "とてつもない", examples: [{ en: "She made <strong>tremendous</strong> progress in learning English.", jp: "彼女は英語の学習でとてつもない進歩を遂げた。" }, { en: "The concert was a <strong>tremendous</strong> success.", jp: "そのコンサートは大成功だった。" }] },
+    { no: "1139", word: "inevitable", ja: "避けられない", examples: [{ en: "Change is <strong>inevitable</strong> in life.", jp: "人生において変化は避けられない。" }, { en: "The accident was <strong>inevitable</strong> due to the heavy rain.", jp: "その事故は豪雨のために避けられなかった。" }] },
+    { no: "1140", word: "pure", ja: "純粋な、純", examples: [{ en: "She wears jewelry made of <strong>pure</strong> gold.", jp: "彼女は純金で作られたアクセサリーを身につけている。" }, { en: "The mountain air is <strong>pure</strong> and refreshing.", jp: "山の空気は澄んでいて爽快だ。" }] }
+  ];
+
+  const container = document.getElementById('card-container');
+  data.forEach((item, index) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.id = `card-${index}`;
+    card.onclick = (e) => { if (!e.target.classList.contains('btn-play-single')) card.classList.toggle('open'); };
+    const exHtml = item.examples.map(ex => `<p>${ex.en}</p><p class="jp">${ex.jp}</p>`).join('');
+    card.innerHTML = `
+      <div class="card-header"><span class="no">${item.no}</span><button class="btn-play-single" onclick="playSingle(${index})">🔊 再生</button></div>
+      <div class="headword">${item.word}</div>
+      <div class="en-text">${item.examples[0].en}</div>
+      <div class="en-text">${item.examples[1].en}</div>
+      <div class="details"><span class="ja-meaning">${item.ja}</span><div class="translations">${exHtml}</div></div>
+    `;
+    container.appendChild(card);
+  });
+
+  const synth = window.speechSynthesis;
+  let currentPlayIndex = -1;
+  let isPlayingAll = false;
+  let voices = [];
+  function loadVoices() { voices = synth.getVoices(); }
+  loadVoices();
+  if (speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = loadVoices;
+
+  function speakText(text, onEnd) {
+    synth.cancel();
+    const utt = new SpeechSynthesisUtterance(text);
+    const targetLang = document.getElementById('voiceSelect').value;
+    let v = voices.find(v => v.lang.startsWith(targetLang));
+    if (!v) v = voices.find(v => v.lang.startsWith('en'));
+    if (v) utt.voice = v;
+    utt.lang = targetLang;
+    utt.rate = 0.88;
+    if (onEnd) utt.onend = onEnd;
+    synth.speak(utt);
+  }
+
+  function stripHtml(html) {
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    return div.textContent || div.innerText || '';
+  }
+
+  function getSpokenText(item) {
+    return item.word + '. ' + stripHtml(item.examples[0].en) + '. ' + stripHtml(item.examples[1].en) + '.';
+  }
+
+  function updateHighlights(index) {
+    document.querySelectorAll('.card').forEach((card, i) => {
+      card.classList.toggle('playing', i === index);
+      if (i === index) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  }
+  function playNext() {
+    if (!isPlayingAll) return;
+    currentPlayIndex++;
+    if (currentPlayIndex >= data.length) { stopAll(); return; }
+    updateHighlights(currentPlayIndex);
+    speakText(getSpokenText(data[currentPlayIndex]), playNext);
+  }
+  function stopAll() { isPlayingAll = false; synth.cancel(); updateHighlights(-1); }
+  window.playSingle = function(index) { stopAll(); updateHighlights(index); speakText(getSpokenText(data[index])); };
+  document.getElementById('playAllBtn').addEventListener('click', () => { isPlayingAll = true; currentPlayIndex = -1; playNext(); });
+  document.getElementById('stopBtn').addEventListener('click', stopAll);
+</script>
+</body>
+</html>
