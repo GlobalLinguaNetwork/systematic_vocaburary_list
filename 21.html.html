@@ -187,6 +187,26 @@
     .translations p { margin: 4px 0; line-height: 1.55; }
     .translations .jp { color: #64748b; font-size: 0.82rem; }
 
+    /* 完了ボタン用スタイル */
+    .btn-finish-study {
+      background: #10b981;
+      color: white;
+      width: 100%;
+      max-width: 300px;
+      margin: 30px auto 0;
+      padding: 16px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      transition: opacity 0.2s;
+    }
+    .btn-finish-study:hover { opacity: 0.9; }
+
     @media print {
       header { position: static; box-shadow: none; }
       body   { padding-top: 0; background: #fff; }
@@ -215,7 +235,10 @@
   <span class="hint-badge">カードをクリックして和訳・例文訳を確認</span>
 </header>
 
-<main class="container" id="card-container"></main>
+<main class="container" id="card-container">
+    <!-- 追加：完了ボタン -->
+    <button class="btn-finish-study" onclick="finishStudy()">✓ 学習を完了する</button>
+</main>
 
 <script>
   const data = [
@@ -232,7 +255,7 @@
     { no: "1751", word: "murmur", ja: "つぶやく、ささやく", examples: [{ en: "He <strong>murmured</strong> a few words of apology.", jp: "彼は謝罪の言葉をいくつか呟きました。" }, { en: "The audience began to <strong>murmur</strong> in disapproval.", jp: "聴衆は不満をささやき始めました。" }] },
     { no: "1752", word: "delete", ja: "削除する", examples: [{ en: "Please <strong>delete</strong> the file once you have finished with it.", jp: "使い終わったら、そのファイルを削除してください。" }, { en: "She decided to <strong>delete</strong> her social media account.", jp: "彼女はソーシャルメディアのアカウントを削除することにしました。" }] },
     { no: "1753", word: "inhibit", ja: "抑制する、妨げる", examples: [{ en: "This new drug can <strong>inhibit</strong> the growth of cancer cells.", jp: "この新薬はがん細胞の増殖を抑制することができます。" }, { en: "Fear of failure can <strong>inhibit</strong> people from trying new things.", jp: "失敗への恐れは、人々が新しいことに挑戦するのを妨げることがあります。" }] },
-    { no: "1754", word: "divert", ja: "そらす、迂回させる", examples: [{ en: "Police had to <strong>divert</strong> traffic away from the scene.", jp: "警察は事故現場から交通を迂回させなければなりませんでした。" }, { en: "The sound helped to <strong>divert</strong> his attention from the pain.", jp: "その音は、彼の注意を痛みからそらすのに役立ちました。" }] },
+    { no: "1754", word: "divert", ja: "そらす、迂回させる", examples: [{ en: "Police had to <strong>divert</strong> traffic away from the scene.", jp: "警察は事故現場から交通を迂回させなければなりません。"}, { en: "The sound helped to <strong>divert</strong> his attention from the pain.", jp: "その音は、彼の注意を痛みからそらすのに役立ちました。" }] },
     { no: "1755", word: "tame", ja: "飼いならす、抑える", examples: [{ en: "It takes a lot of patience to <strong>tame</strong> a wild horse.", jp: "野生の馬を飼いならすには多くの忍耐が必要です。" }, { en: "She struggled to <strong>tame</strong> her frizzy hair.", jp: "彼女はくせ毛を抑えるのに苦労しました。" }] },
     { no: "1756", word: "reap", ja: "得る、収穫する", examples: [{ en: "If you work hard now, you will <strong>reap</strong> the benefits later.", jp: "今、一生懸命働けば、後で恩恵を得るでしょう。" }, { en: "The farmers are getting ready to <strong>reap</strong> the harvest.", jp: "農家の人々は収穫の準備をしています。" }] },
     { no: "1757", word: "affirm", ja: "断言する、表明する", examples: [{ en: "The witness <strong>affirmed</strong> that the defendant was the person.", jp: "その証人は、被告が彼女が見た人物であると断言しました。" }, { en: "She <strong>affirmed</strong> her commitment to the cause.", jp: "彼女はその大義への献身を改めて表明しました。" }] },
@@ -250,7 +273,7 @@
     { no: "1769", word: "sue", ja: "訴える", examples: [{ en: "She is planning to <strong>sue</strong> the company for unfair dismissal.", jp: "彼女は不当解雇で会社を訴えることを計画しています。" }, { en: "He threatened to <strong>sue</strong> them for breach of contract.", jp: "彼は契約違反で彼らを訴えると脅しました。" }] },
     { no: "1770", word: "distort", ja: "歪める", examples: [{ en: "The media has been accused of <strong>distorting</strong> the facts.", jp: "マスメディアは事実を歪めていると非難されてきました。" }, { en: "The mirror <strong>distorted</strong> their reflections in a comical way.", jp: "その鏡は、彼らの姿を滑稽な方法で歪めました。" }] },
     { no: "1771", word: "extinguish", ja: "消す", examples: [{ en: "Firefighters worked hard to <strong>extinguish</strong> the forest fire.", jp: "消防士たちは森林火災を消すために懸命に働きました。" }, { en: "Nothing could <strong>extinguish</strong> his passion for learning.", jp: "何も彼の学習への情熱を消すことはできませんでした。" }] },
-    { no: "1772", word: "preach", ja: "説く", examples: [{ en: "The priest <strong>preached</strong> a sermon about forgiveness.", jp: "その司祭は許しについての説教をしました。" }, { en: "My parents always <strong>preach</strong> the importance of honesty.", jp: "私の両親はいつも正直さの重要性を説きます。" }] },
+    { no: "1772", word: "preach", ja: "説く", examples: [{ en: "The priest <strong>preached</strong> a sermon about forgiveness.", jp: "その司祭は許しについての説教をしました。" }, { en: "My parents always <strong>preach</strong> the importance of honesty.", jp: "私の親はいつも正直さの重要性を説きます。" }] },
     { no: "1773", word: "curb", ja: "抑制する、縁石", examples: [{ en: "The city is taking measures to <strong>curb</strong> air pollution.", jp: "その市は大気汚染を抑制するための対策を講じています。" }, { en: "He accidentally parked his car too close to the <strong>curb</strong>.", jp: "彼は誤って車を縁石に近づけすぎて駐車しました。" }] },
     { no: "1774", word: "withstand", ja: "耐える", examples: [{ en: "The building was designed to <strong>withstand</strong> strong earthquakes.", jp: "その建物は強い地震に耐えるように設計されていました。" }, { en: "She could not <strong>withstand</strong> the pressure of her new job.", jp: "彼女は新しい仕事のプレッシャーに耐えることができませんでした。" }] },
     { no: "1775", word: "dip", ja: "浸す、急な落ち込み", examples: [{ en: "She <strong>dipped</strong> the strawberry into the melted chocolate.", jp: "彼女はイチゴを溶かしたチョコレートに浸しました。" }, { en: "There was a sharp <strong>dip</strong> in sales during the last quarter.", jp: "前四半期に売上が急激に落ち込みました。" }] },
@@ -312,6 +335,9 @@
   ];
 
   const container = document.getElementById('card-container');
+  // 完了ボタンより前にカードを挿入するための準備
+  const finishBtn = container.querySelector('.btn-finish-study');
+
   data.forEach((item, index) => {
     const card = document.createElement('div');
     card.className = 'card';
@@ -325,7 +351,7 @@
       <div class="en-text">${item.examples[1].en}</div>
       <div class="details"><span class="ja-meaning">${item.ja}</span><div class="translations">${exHtml}</div></div>
     `;
-    container.appendChild(card);
+    container.insertBefore(card, finishBtn);
   });
 
   const synth = window.speechSynthesis;
@@ -376,6 +402,38 @@
   window.playSingle = function(index) { stopAll(); updateHighlights(index); speakText(getSpokenText(data[index])); };
   document.getElementById('playAllBtn').addEventListener('click', () => { isPlayingAll = true; currentPlayIndex = -1; playNext(); });
   document.getElementById('stopBtn').addEventListener('click', stopAll);
+
+  // ==========================================
+  // 追加：ポータルへデータを送信する処理
+  // ==========================================
+  function finishStudy() {
+    if (typeof stopAll === 'function') stopAll(); // 再生機能があれば止める
+    
+    var sectionName = sessionStorage.getItem('gln_sisutan_current_section') || 'シス単チェック 学習完了';
+    
+    var payload = {
+      type:   'GLN_COMPLETE',
+      title:  'シス単例文付きチェックリスト',
+      cat:    'Vocab',
+      detail: sectionName,
+      words:  350,
+      timestamp: Date.now()
+    };
+
+    if (window.opener && !window.opener.closed) {
+      window.opener.postMessage(payload, '*');
+    }
+    try { 
+      localStorage.setItem('GLN_SYNC_PAYLOAD', JSON.stringify(payload)); 
+      localStorage.setItem('gln_sisutan_result', JSON.stringify({
+        section: sectionName,
+        timestamp: Date.now()
+      }));
+    } catch(e) {}
+    
+    alert('「' + sectionName + '」の学習完了を記録しました！');
+    window.location.href = 'index.html';
+  }
 </script>
 </body>
 </html>

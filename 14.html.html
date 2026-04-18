@@ -181,6 +181,26 @@
     .translations p { margin: 4px 0; line-height: 1.55; }
     .translations .jp { color: #64748b; font-size: 0.82rem; }
 
+    /* 完了ボタン用スタイル */
+    .btn-finish-study {
+      background: #10b981;
+      color: white;
+      width: 100%;
+      max-width: 300px;
+      margin: 30px auto 0;
+      padding: 16px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      transition: opacity 0.2s;
+    }
+    .btn-finish-study:hover { opacity: 0.9; }
+
     @media print {
       header { position: static; box-shadow: none; }
       body   { padding-top: 0; background: #fff; }
@@ -209,7 +229,10 @@
   <span class="hint-badge">カードをクリックして和訳・例文訳を確認</span>
 </header>
 
-<main class="container" id="card-container"></main>
+<main class="container" id="card-container">
+    <!-- 追加：完了ボタン -->
+    <button class="btn-finish-study" onclick="finishStudy()">✓ 学習を完了する</button>
+</main>
 
 <script>
   const data = [
@@ -229,7 +252,7 @@
     { no: "1154", word: "cruel", ja: "残酷な", examples: [{ en: "The dictator was known for his cruel treatment of prisoners.", jp: "その独裁者は囚人への残酷な扱いで知られていた。" }, { en: "It was cruel to mock the child for his mistake.", jp: "その子供のミスを嘲笑するのは残酷だった。" }] },
     { no: "1155", word: "rational", ja: "理性的な、合理的な", examples: [{ en: "He made a rational decision based on facts.", jp: "彼は事実に基づいて理性的な決定を下した。" }, { en: "It is important to remain rational in difficult situations.", jp: "困難な状況でも理性的でいることが重要だ。" }] },
     { no: "1156", word: "initial", ja: "最初の", examples: [{ en: "Her initial reaction was surprise.", jp: "彼女の最初の反応は驚きだった。" }, { en: "The initial stages of the project were challenging.", jp: "プロジェクトの最初の段階は困難だった。" }] },
-    { no: "1157", word: "immune", ja: "免疫のある", examples: [{ en: "Regular exercise can strengthen the immune system.", jp: "定期的な運動は免疫システムを強化する。" }, { en: "He is immune to certain diseases due to vaccination.", jp: "彼は予防接種のおかげで特定の病気に免疫がある。" }] },
+    { no: "1157", word: "immune", ja: "免疫のある", examples: [{ en: "Regular exercise can strengthen the immune system.", jp: "定期的な運動は免疫システムを強化する。" }, { en: "He is immune to certain diseases due to vaccination.", jp: "彼は予防接種のおかげで特定の病家に免疫がある。" }] },
     { no: "1158", word: "linguistic", ja: "言語の", examples: [{ en: "She is interested in linguistic studies.", jp: "彼女は言語学研究に関心がある。" }, { en: "Linguistic diversity is important in global communication.", jp: "言語の多様性は国際的なコミュニケーションにおいて重要だ。" }] },
     { no: "1159", word: "crucial", ja: "重大な、決定的な", examples: [{ en: "Water conservation is crucial for the environment.", jp: "水の保護は環境にとって重大な課題だ。" }, { en: "His role in the project is crucial to its success.", jp: "彼のプロジェクトでの役割は成功にとって重要だ。" }] },
     { no: "1160", word: "verbal", ja: "言葉による", examples: [{ en: "She gave a verbal agreement to the proposal.", jp: "彼女はその提案に対して言葉による合意を示した。" }, { en: "Verbal communication is essential in teamwork.", jp: "言葉によるコミュニケーションはチームワークに不可欠だ。" }] },
@@ -276,6 +299,9 @@
   ];
 
   const container = document.getElementById('card-container');
+  // 完了ボタンより前にカードを挿入するための準備
+  const finishBtn = container.querySelector('.btn-finish-study');
+
   data.forEach((item, index) => {
     const card = document.createElement('div');
     card.className = 'card';
@@ -289,7 +315,7 @@
       <div class="en-text">${item.examples[1].en}</div>
       <div class="details"><span class="ja-meaning">${item.ja}</span><div class="translations">${exHtml}</div></div>
     `;
-    container.appendChild(card);
+    container.insertBefore(card, finishBtn);
   });
 
   const synth = window.speechSynthesis;
@@ -340,6 +366,38 @@
   window.playSingle = function(index) { stopAll(); updateHighlights(index); speakText(getSpokenText(data[index])); };
   document.getElementById('playAllBtn').addEventListener('click', () => { isPlayingAll = true; currentPlayIndex = -1; playNext(); });
   document.getElementById('stopBtn').addEventListener('click', stopAll);
+
+  // ==========================================
+  // 追加：ポータルへデータを送信する処理
+  // ==========================================
+  function finishStudy() {
+    if (typeof stopAll === 'function') stopAll(); // 再生機能があれば止める
+    
+    var sectionName = sessionStorage.getItem('gln_sisutan_current_section') || 'シス単チェック 学習完了';
+    
+    var payload = {
+      type:   'GLN_COMPLETE',
+      title:  'シス単例文付きチェックリスト',
+      cat:    'Vocab',
+      detail: sectionName,
+      words:  350,
+      timestamp: Date.now()
+    };
+
+    if (window.opener && !window.opener.closed) {
+      window.opener.postMessage(payload, '*');
+    }
+    try { 
+      localStorage.setItem('GLN_SYNC_PAYLOAD', JSON.stringify(payload)); 
+      localStorage.setItem('gln_sisutan_result', JSON.stringify({
+        section: sectionName,
+        timestamp: Date.now()
+      }));
+    } catch(e) {}
+    
+    alert('「' + sectionName + '」の学習完了を記録しました！');
+    window.location.href = 'index.html';
+  }
 </script>
 </body>
 </html>

@@ -181,6 +181,26 @@
     .translations p { margin: 4px 0; line-height: 1.55; }
     .translations .jp { color: #64748b; font-size: 0.82rem; }
 
+    /* 完了ボタン用スタイル */
+    .btn-finish-study {
+      background: #10b981;
+      color: white;
+      width: 100%;
+      max-width: 300px;
+      margin: 30px auto 0;
+      padding: 16px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      transition: opacity 0.2s;
+    }
+    .btn-finish-study:hover { opacity: 0.9; }
+
     @media print {
       header { position: static; box-shadow: none; }
       body   { padding-top: 0; background: #fff; }
@@ -210,6 +230,11 @@
 </header>
 
 <main class="container" id="card-container"></main>
+
+<!-- 追加：完了ボタン -->
+<div class="container" style="text-align: center; padding-top: 0;">
+    <button class="btn-finish-study" onclick="finishStudy()">✓ 学習を完了する</button>
+</div>
 
 <script>
   const data = [
@@ -252,7 +277,7 @@
     { no: "1957", word: "subjective", ja: "主観的な", examples: [{ en: "The beauty of art is a subjective experience.", jp: "芸術の美しさは主観的な経験です。" }, { en: "Your judgment of the situation is too subjective to be fair.", jp: "その状況に対するあなたの判断は、公正であるにはあまりにも主観的すぎます。" }] },
     { no: "1958", word: "enlightened", ja: "啓発された、見識のある", examples: [{ en: "He has an enlightened attitude on social issues.", jp: "彼は社会問題について啓発された（見識のある）態度を持っています。" }, { en: "Traveling gave her a more enlightened perspective.", jp: "旅は彼女により見識のある視点を与えました。" }] },
     { no: "1959", word: "authentic", ja: "本物の", examples: [{ en: "The museum confirmed the Van Gogh was authentic.", jp: "その美術館はゴッホの絵が本物であることを確認しました。" }, { en: "This book gives an authentic account of 18th-century life.", jp: "この本は 18 世紀の生活を忠実に（本物らしく）伝えています。" }] },
-    { no: "1960", word: "brutal", ja: "残忍な、過酷な", examples: [{ en: "The regime was known for its brutal treatment of prisoners.", jp: "その政権は囚人に対する残忍な扱いで知られていました。" }, { en: "The team endured a brutal training schedule.", jp: "そのチームは過酷なトレーニングスケジュールに耐えました。" }] },
+    { no: "1960", word: "brutal", ja: "残忍な、過酷な", examples: [{ en: "The regime was known for its brutal treatment of prisoners.", jp: "その政権は囚人に対する残忍な扱いで知っていました。" }, { en: "The team endured a brutal training schedule.", jp: "そのチームは過酷なトレーニングスケジュールに耐えました。" }] },
     { no: "1961", word: "dizzy", ja: "めまいがする、目まぐるしい", examples: [{ en: "Standing up too quickly can make you feel dizzy.", jp: "急に立ち上がるとめまいがすることがあります。" }, { en: "She achieved a dizzy rise to fame.", jp: "彼女は目まぐるしい速さで名声を手に入れました。" }] },
     { no: "1962", word: "sheer", ja: "全くの、薄手の", examples: [{ en: "The success of the project was due to sheer hard work.", jp: "そのプロジェクトの成功は、全くの（純粋な）努力の賜物でした。" }, { en: "She wore a dress made of sheer silk.", jp: "彼女は薄手のシルクでできたドレスを着ていました。" }] },
     { no: "1963", word: "naughty", ja: "いたずらな、わいせつな", examples: [{ en: "The naughty child drew on the walls with crayons.", jp: "そのいたずらな子供は壁にクレヨンで絵を描きました。" }, { en: "He gave her a naughty wink.", jp: "彼は彼女にいたずらっぽくウインクしました。" }] },

@@ -189,6 +189,26 @@
       .card  { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
       .details { max-height: none !important; opacity: 1 !important; }
     }
+
+    /* 完了ボタン用スタイル */
+    .btn-finish-study {
+      background: #10b981;
+      color: white;
+      width: 100%;
+      max-width: 300px;
+      margin: 30px auto 0;
+      padding: 16px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      transition: opacity 0.2s;
+    }
+    .btn-finish-study:hover { opacity: 0.9; }
   </style>
 </head>
 <body>
@@ -210,7 +230,9 @@
   <span class="hint-badge">カードをクリックして和訳・例文訳を確認</span>
 </header>
 
-<main class="container" id="card-container"></main>
+<main class="container" id="card-container">
+  <!-- JavaScriptでカードがここに追加されます -->
+</main>
 
 <script>
   const data = [
@@ -232,7 +254,7 @@
     { no: "556", word: "enormous", ja: "莫大な", examples: [{ en: "The universe is enormously vast and mysterious.", jp: "宇宙は広大で神秘的だ。" }, { en: "She made an enormous effort to succeed.", jp: "彼女は成功するために莫大な努力をした。" }] },
     { no: "557", word: "rare", ja: "珍しい", examples: [{ en: "This bird species is very rare.", jp: "この鳥の種類は非常に珍しい。" }, { en: "It is rare to see snow in this area.", jp: "この地域で雪を見るのは珍しい。" }] },
     { no: "558", word: "artificial", ja: "人工の", examples: [{ en: "The artificial flowers look very realistic.", jp: "人工の花はとても本物のように見える。" }, { en: "Artificial intelligence is changing the world.", jp: "人工知能が世界を変えている。" }] },
-    { no: "559", word: "tiny", ja: "ちっちゃな", examples: [{ en: "She found a tiny insect on the leaf.", jp: "彼女は葉の上に小さな昆虫を見つけた。" }, { en: "This town is tiny compared to the big city.", jp: "この町は大都市と比べると小さい。" }] },
+    { no: "559", word: "tiny", ja: "ちっちゃな", examples: [{ en: "She find a tiny insect on the leaf.", jp: "彼女は葉の上に小さな昆虫を見つけた。" }, { en: "This town is tiny compared to the big city.", jp: "この町は大都市と比べると小さい。" }] },
     { no: "560", word: "considerable", ja: "かなりの", examples: [{ en: "The project required a considerable amount of funding.", jp: "そのプロジェクトにはかなりの資金が必要だった。" }, { en: "She gained a considerable amount of experience in her job.", jp: "彼女は仕事でかなりの経験を積んだ。" }] },
     { no: "561", word: "sensitive", ja: "敏感な", examples: [{ en: "He is very sensitive to criticism.", jp: "彼は批判に非常に敏感だ。" }, { en: "This skin cream is designed for sensitive skin.", jp: "このスキンクリームは敏感肌用に作られている。" }] },
     { no: "562", word: "intellectual", ja: "知的な", examples: [{ en: "She enjoys intellectual discussions about philosophy.", jp: "彼女は哲学についての知的な議論を楽しむ。" }, { en: "Reading books helps develop intellectual skills.", jp: "本を読んでいることは知的な能力を伸ばすのに役立つ。" }] },
@@ -293,6 +315,13 @@
     container.appendChild(card);
   });
 
+  // 追加：完了ボタンを末尾に作成
+  const finishBtn = document.createElement('button');
+  finishBtn.className = 'btn-finish-study';
+  finishBtn.innerHTML = '✓ 学習を完了する';
+  finishBtn.onclick = finishStudy;
+  container.appendChild(finishBtn);
+
   const synth = window.speechSynthesis;
   let currentPlayIndex = -1;
   let isPlayingAll = false;
@@ -332,6 +361,38 @@
   window.playSingle = function(index) { stopAll(); updateHighlights(index); speakText(getSpokenText(data[index])); };
   document.getElementById('playAllBtn').addEventListener('click', () => { isPlayingAll = true; currentPlayIndex = -1; playNext(); });
   document.getElementById('stopBtn').addEventListener('click', stopAll);
+
+  // ==========================================
+  // 追加：ポータルへデータを送信する処理
+  // ==========================================
+  function finishStudy() {
+    if (typeof stopAll === 'function') stopAll(); // 再生機能があれば止める
+    
+    var sectionName = sessionStorage.getItem('gln_sisutan_current_section') || 'シス単チェック 学習完了';
+    
+    var payload = {
+      type:   'GLN_COMPLETE',
+      title:  'シス単例文付きチェックリスト',
+      cat:    'Vocab',
+      detail: sectionName,
+      words:  350,
+      timestamp: Date.now()
+    };
+
+    if (window.opener && !window.opener.closed) {
+      window.opener.postMessage(payload, '*');
+    }
+    try { 
+      localStorage.setItem('GLN_SYNC_PAYLOAD', JSON.stringify(payload)); 
+      localStorage.setItem('gln_sisutan_result', JSON.stringify({
+        section: sectionName,
+        timestamp: Date.now()
+      }));
+    } catch(e) {}
+    
+    alert('「' + sectionName + '」の学習完了を記録しました！');
+    window.location.href = 'index.html';
+  }
 </script>
 </body>
 </html>

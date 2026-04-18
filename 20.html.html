@@ -187,6 +187,26 @@
     .translations p { margin: 4px 0; line-height: 1.55; }
     .translations .jp { color: #64748b; font-size: 0.82rem; }
 
+    /* 完了ボタン用スタイル */
+    .btn-finish-study {
+      background: #10b981;
+      color: white;
+      width: 100%;
+      max-width: 300px;
+      margin: 30px auto 0;
+      padding: 16px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      transition: opacity 0.2s;
+    }
+    .btn-finish-study:hover { opacity: 0.9; }
+
     @media print {
       header { position: static; box-shadow: none; }
       body   { padding-top: 0; background: #fff; }
@@ -215,7 +235,10 @@
   <span class="hint-badge">カードをクリックして和訳・例文訳を確認</span>
 </header>
 
-<main class="container" id="card-container"></main>
+<main class="container" id="card-container">
+    <!-- 追加：完了ボタン -->
+    <button class="btn-finish-study" onclick="finishStudy()">✓ 学習を完了する</button>
+</main>
 
 <script>
   const data = [
@@ -253,7 +276,7 @@
     { no: "1682", word: "promising", ja: "有望な", examples: [{ en: "She is a <strong>promising</strong> young athlete.", jp: "彼女は将来を期待されている有望な若いアスリートです。" }, { en: "The initial results are very <strong>promising</strong>.", jp: "その実験の初期結果は非常に有望です。" }] },
     { no: "1683", word: "physiological", ja: "生理学的な", examples: [{ en: "Stress can have a <strong>physiological</strong> effect on the body.", jp: "ストレスは体に重大な生理学的影響を与える可能性があります。" }, { en: "The book explains the <strong>physiological</strong> processes.", jp: "その本は消化の生理学的プロセスを説明しています。" }] },
     { no: "1684", word: "clinical", ja: "臨床の、冷静な", examples: [{ en: "The new drug is currently in <strong>clinical</strong> trials.", jp: "その新薬は現在、臨床試験を受けています。" }, { en: "He described the accident in a <strong>clinical</strong> manner.", jp: "彼はその事故について冷静で感情を交えない態度で説明しました。" }] },
-    { no: "1685", word: "chronic", ja: "慢性の", examples: [{ en: "He suffers from <strong>chronic</strong> back pain.", jp: "彼は慢性の腰痛に苦しんでいます。" }, { en: "The city has a <strong>chronic</strong> problem with traffic.", jp: "その都市は交通渋滞という慢性的な問題を抱えています。" }] },
+    { no: "1685", word: "chronic", ja: "慢性の", examples: [{ en: "He suffers from <strong>chronic</strong> back pain.", jp: "彼は慢性の腰痛に苦しんでいます。" }, { en: "The city has a <strong>chronic</strong> problem with traffic.", jp: "その都市は交通滞滞という慢性的な問題を抱えています。" }] },
     { no: "1686", word: "geological", ja: "地質学的な", examples: [{ en: "The region is known for <strong>geological</strong> formations.", jp: "その地域は独特の地質学的構造で知られています。" }, { en: "The <strong>geological</strong> history spans billions of years.", jp: "地球の地質学的歴史は何十億年にも及びます。" }] },
     { no: "1687", word: "countless", ja: "無数の", examples: [{ en: "There are <strong>countless</strong> stars in the night sky.", jp: "夜空には無数の星があります。" }, { en: "I've told you <strong>countless</strong> times to clean your room.", jp: "部屋を掃除するように数えきれないほど言いましたよ。" }] },
     { no: "1688", word: "innate", ja: "生まれつきの", examples: [{ en: "She has an <strong>innate</strong> ability to connect with animals.", jp: "彼女には動物と心を通わせる生まれつきの能力があります。" }, { en: "His <strong>innate</strong> sense of fairness made him a leader.", jp: "彼の生来の公正感が彼を良いリーダーにしました。" }] },
@@ -312,6 +335,9 @@
   ];
 
   const container = document.getElementById('card-container');
+  // 完了ボタンより前にカードを挿入するための準備
+  const finishBtn = container.querySelector('.btn-finish-study');
+
   data.forEach((item, index) => {
     const card = document.createElement('div');
     card.className = 'card';
@@ -325,7 +351,7 @@
       <div class="en-text">${item.examples[1].en}</div>
       <div class="details"><span class="ja-meaning">${item.ja}</span><div class="translations">${exHtml}</div></div>
     `;
-    container.appendChild(card);
+    container.insertBefore(card, finishBtn);
   });
 
   const synth = window.speechSynthesis;
@@ -381,6 +407,38 @@
   window.playSingle = function(index) { stopAll(); updateHighlights(index); speakText(getSpokenText(data[index])); };
   document.getElementById('playAllBtn').addEventListener('click', () => { isPlayingAll = true; currentPlayIndex = -1; playNext(); });
   document.getElementById('stopBtn').addEventListener('click', stopAll);
+
+  // ==========================================
+  // 追加：ポータルへデータを送信する処理
+  // ==========================================
+  function finishStudy() {
+    if (typeof stopAll === 'function') stopAll(); // 再生機能があれば止める
+    
+    var sectionName = sessionStorage.getItem('gln_sisutan_current_section') || 'シス単チェック 学習完了';
+    
+    var payload = {
+      type:   'GLN_COMPLETE',
+      title:  'シス単例文付きチェックリスト',
+      cat:    'Vocab',
+      detail: sectionName,
+      words:  350,
+      timestamp: Date.now()
+    };
+
+    if (window.opener && !window.opener.closed) {
+      window.opener.postMessage(payload, '*');
+    }
+    try { 
+      localStorage.setItem('GLN_SYNC_PAYLOAD', JSON.stringify(payload)); 
+      localStorage.setItem('gln_sisutan_result', JSON.stringify({
+        section: sectionName,
+        timestamp: Date.now()
+      }));
+    } catch(e) {}
+    
+    alert('「' + sectionName + '」の学習完了を記録しました！');
+    window.location.href = 'index.html';
+  }
 </script>
 </body>
 </html>

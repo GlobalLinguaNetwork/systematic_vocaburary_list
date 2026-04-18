@@ -189,6 +189,26 @@
       .card  { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
       .details { max-height: none !important; opacity: 1 !important; }
     }
+
+    /* 完了ボタン用スタイル */
+    .btn-finish-study {
+      background: #10b981;
+      color: white;
+      width: 100%;
+      max-width: 300px;
+      margin: 30px auto 0;
+      padding: 16px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      transition: opacity 0.2s;
+    }
+    .btn-finish-study:hover { opacity: 0.9; }
   </style>
 </head>
 <body>
@@ -210,7 +230,10 @@
   <span class="hint-badge">カードをクリックして和訳・例文訳を確認</span>
 </header>
 
-<main class="container" id="card-container"></main>
+<main class="container" id="card-container">
+  <!-- 追加：完了ボタン -->
+  <button class="btn-finish-study" onclick="finishStudy()">✓ 学習を完了する</button>
+</main>
 
 <script>
   const data = [
@@ -303,7 +326,7 @@
     { no: "447", word: "structure", ja: "構造", examples: [{ en: "The bridge has a strong structure.", jp: "その橋は丈夫な構造をしている。" }, { en: "Understanding sentence structure is important in writing.", jp: "文章構造を理解することはライティングにおいて重要だ。" }] },
     { no: "448", word: "tradition", ja: "伝統", examples: [{ en: "This festival is an important tradition in Japan.", jp: "この祭りは日本の重要な伝統だ。" }, { en: "They follow the family tradition of gathering for New Year’s.", jp: "彼らは正月に集まるという家族の伝統を守っている。" }] },
     { no: "449", word: "weight", ja: "体重、重量", examples: [{ en: "He wants to lose weight to improve his health.", jp: "彼は健康を改善するために体重を減らしたい。" }, { en: "The package’s weight affects the shipping cost.", jp: "荷物の重量が送料に影響を与える。" }] },
-    { no: "450", word: "charity", ja: "慈善、慈善団体", examples: [{ en: "She donated money to a charity organization.", jp: "彼女は慈善団体に寄付をした。" }, { en: "The event raised money for charity.", jp: "そのイベントは慈善のために資金を集めた。" }] }
+    { no: "450", word: "charity", ja: "慈善、慈善団体", examples: [{ en: "She donated money to a charity organization.", jp: "彼女は慈善団体に寄寄をした。" }, { en: "The event raised money for charity.", jp: "そのイベントは慈善のために資金を集めた。" }] }
   ];
 
   const container = document.getElementById('card-container');
@@ -320,7 +343,8 @@
       <div class="en-text">${item.examples[1].en}</div>
       <div class="details"><span class="ja-meaning">${item.ja}</span><div class="translations">${exHtml}</div></div>
     `;
-    container.appendChild(card);
+    // 完了ボタンの前に追加
+    container.insertBefore(card, container.lastElementChild);
   });
 
   const synth = window.speechSynthesis;
@@ -362,6 +386,38 @@
   window.playSingle = function(index) { stopAll(); updateHighlights(index); speakText(getSpokenText(data[index])); };
   document.getElementById('playAllBtn').addEventListener('click', () => { isPlayingAll = true; currentPlayIndex = -1; playNext(); });
   document.getElementById('stopBtn').addEventListener('click', stopAll);
+
+  // ==========================================
+  // 追加：ポータルへデータを送信する処理
+  // ==========================================
+  function finishStudy() {
+    if (typeof stopAll === 'function') stopAll(); // 再生機能があれば止める
+    
+    var sectionName = sessionStorage.getItem('gln_sisutan_current_section') || 'シス単チェック 学習完了';
+    
+    var payload = {
+      type:   'GLN_COMPLETE',
+      title:  'シス単例文付きチェックリスト',
+      cat:    'Vocab',
+      detail: sectionName,
+      words:  350,
+      timestamp: Date.now()
+    };
+
+    if (window.opener && !window.opener.closed) {
+      window.opener.postMessage(payload, '*');
+    }
+    try { 
+      localStorage.setItem('GLN_SYNC_PAYLOAD', JSON.stringify(payload)); 
+      localStorage.setItem('gln_sisutan_result', JSON.stringify({
+        section: sectionName,
+        timestamp: Date.now()
+      }));
+    } catch(e) {}
+    
+    alert('「' + sectionName + '」の学習完了を記録しました！');
+    window.location.href = 'index.html';
+  }
 </script>
 </body>
 </html>

@@ -195,6 +195,26 @@
       .card  { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
       .details { max-height: none !important; opacity: 1 !important; }
     }
+
+    /* 完了ボタン用スタイル */
+    .btn-finish-study {
+      background: #10b981;
+      color: white;
+      width: 100%;
+      max-width: 300px;
+      margin: 30px auto 0;
+      padding: 16px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      transition: opacity 0.2s;
+    }
+    .btn-finish-study:hover { opacity: 0.9; }
   </style>
 </head>
 <body>
@@ -216,7 +236,9 @@
   <span class="hint-badge">カードをクリックして和訳・例文訳を確認</span>
 </header>
 
-<main class="container" id="card-container"></main>
+<main class="container" id="card-container">
+    <!-- JavaScriptでカードがここに追加されます -->
+</main>
 
 <script>
   const data = [
@@ -302,7 +324,7 @@
     { no: "860", word: "bury", ja: "～を埋める", examples: [{ en: "He <strong>buried</strong> the treasure in the backyard.", jp: "彼は宝物を裏庭に埋めた。" }, { en: "She <strong>buried</strong> her feelings deep inside.", jp: "彼女は自分の気持ちを深く胸に秘めた。" }] },
     { no: "861", word: "cope", ja: "うまく対処する(cope with A)", examples: [{ en: "She learned to <strong>cope</strong> with stress at work.", jp: "彼女は職場のストレスにうまく対処する方法を学んだ。" }, { en: "He is <strong>coping</strong> well with the new challenges.", jp: "彼は新しい課題にうまく適応している。" }] },
     { no: "862", word: "occur", ja: "起こる", examples: [{ en: "The earthquake <strong>occurred</strong> in the early morning.", jp: "地震は早朝に発生した。" }, { en: "Accidents <strong>occur</strong> when drivers are careless.", jp: "運転者が不注意なときに事故は起こる。" }] },
-    { no: "863", word: "accomplish", ja: "～をやりとげる", examples: [{ en: "She <strong>accomplished</strong> her dream of becoming a doctor.", jp: "彼女は医者になるという夢を達成した。" }, { en: "They <strong>accomplished</strong> the project on time.", jp: "彼らはプロジェクトを期限内に完了した。" }] },
+    { no: "863", word: "accomplish", ja: "～をやりとげる", examples: [{ en: "She <strong>accomplished</strong> her dream of becoming a doctor.", jp: "彼女は医者になるという目標を達成した。" }, { en: "They <strong>accomplished</strong> the project on time.", jp: "彼らはプロジェクトを期限内に完了した。" }] },
     { no: "864", word: "hesitate", ja: "ためらう", examples: [{ en: "She <strong>hesitated</strong> before answering the difficult question.", jp: "彼女は難しい質問に答える前にためらった。" }, { en: "Don’t <strong>hesitate</strong> to ask for help.", jp: "助けを求めることをためらわないで。" }] },
     { no: "865", word: "endure", ja: "～に耐える", examples: [{ en: "He <strong>endured</strong> many hardships to achieve success.", jp: "彼は成功を収めるために多くの困難に耐えた。" }, { en: "The bridge is built to <strong>endure</strong> strong winds.", jp: "その橋は強風に耐えられるように設計されている。" }] },
     { no: "866", word: "conclude", ja: "～と結論づける", examples: [{ en: "The scientists <strong>concluded</strong> that the theory was correct.", jp: "科学者たちはその理論が正しいと結論づけた。" }, { en: "She <strong>concluded</strong> the meeting with a summary of key points.", jp: "彼女は主要なポイントの要約で会議を締めくくった。" }] },
