@@ -33,61 +33,14 @@
       padding: 15px 0;
       text-align: center;
     }
-    h1 {
-      margin: 0;
-      font-size: 1.2rem;
-      color: var(--primary-color);
-      letter-spacing: 0.05em;
-    }
-    .container {
-      max-width: 500px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    .section-title {
-      font-size: 0.85rem;
-      color: var(--text-sub);
-      margin: 20px 0 10px 5px;
-      font-weight: bold;
-      border-left: 4px solid var(--primary-color);
-      padding-left: 10px;
-    }
-    .menu-list {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    .menu-item {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 15px 10px;
-      background: var(--card-bg);
-      border-radius: 12px;
-      text-decoration: none;
-      color: var(--text-main);
-      font-weight: bold;
-      font-size: 0.95rem;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      border: 1px solid transparent;
-      transition: all 0.2s;
-    }
-    .menu-item:active {
-      background-color: #dbeafe;
-      transform: scale(0.95);
-      border-color: var(--primary-color);
-    }
-    /* 完了済みセクションのスタイル */
-    .menu-item.done {
-      background-color: #f0fdf4;
-      border-color: #86efac;
-      color: #166534;
-    }
-    .menu-item.done::after {
-      content: ' ✓';
-      font-size: 0.8rem;
-      color: #16a34a;
-    }
+    h1 { margin: 0; font-size: 1.2rem; color: var(--primary-color); letter-spacing: 0.05em; }
+    .container { max-width: 500px; margin: 0 auto; padding: 20px; }
+    .section-title { font-size: 0.85rem; color: var(--text-sub); margin: 20px 0 10px 5px; font-weight: bold; border-left: 4px solid var(--primary-color); padding-left: 10px; }
+    .menu-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .menu-item { display: flex; align-items: center; justify-content: center; padding: 15px 10px; background: var(--card-bg); border-radius: 12px; text-decoration: none; color: var(--text-main); font-weight: bold; font-size: 0.95rem; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid transparent; transition: all 0.2s; }
+    .menu-item:active { background-color: #dbeafe; transform: scale(0.95); border-color: var(--primary-color); }
+    .menu-item.done { background-color: #f0fdf4; border-color: #86efac; color: #166534; }
+    .menu-item.done::after { content: ' ✓'; font-size: 0.8rem; color: #16a34a; }
   </style>
 </head>
 <body>
@@ -111,60 +64,38 @@
 
     <div class="section-title">Essential (No.601–1200)</div>
     <div class="menu-list">
-      <a href="08.html" class="menu-item" data-section="E 601–690"   onclick="recordSection(this)">F 601–690</a>
-      <a href="09.html" class="menu-item" data-section="E 691–780"   onclick="recordSection(this)">F 691–780</a>
-      <a href="10.html" class="menu-item" data-section="E 781–870"   onclick="recordSection(this)">F 781–870</a>
-      <a href="11.html" class="menu-item" data-section="E 871–960"   onclick="recordSection(this)">F 871–960</a>
-      <a href="12.html" class="menu-item" data-section="E 961–1050"  onclick="recordSection(this)">F 961–1050</a>
-      <a href="13.html" class="menu-item" data-section="E 1051–1140" onclick="recordSection(this)">F 1051–1140</a>
-      <a href="14.html" class="menu-item" data-section="E 1141–1200" onclick="recordSection(this)">F 1141–1200</a>
+      <a href="08.html" class="menu-item" data-section="E 601–690"   onclick="recordSection(this)">E 601–690</a>
+      <a href="09.html" class="menu-item" data-section="E 691–780"   onclick="recordSection(this)">E 691–780</a>
+      <a href="10.html" class="menu-item" data-section="E 781–870"   onclick="recordSection(this)">E 781–870</a>
+      <a href="11.html" class="menu-item" data-section="E 871–960"   onclick="recordSection(this)">E 871–960</a>
+      <a href="12.html" class="menu-item" data-section="E 961–1050"  onclick="recordSection(this)">E 961–1050</a>
+      <a href="13.html" class="menu-item" data-section="E 1051–1140" onclick="recordSection(this)">E 1051–1140</a>
+      <a href="14.html" class="menu-item" data-section="E 1141–1200" onclick="recordSection(this)">E 1141–1200</a>
     </div>
 
     <div class="section-title">Advanced (No.1201–2027)</div>
     <div class="menu-list">
-      <a href="15.html" class="menu-item" data-section="A 1201–1290" onclick="recordSection(this)">F 1201–1290</a>
-      <a href="16.html" class="menu-item" data-section="A 1291–1380" onclick="recordSection(this)">F 1291–1380</a>
-      <a href="17.html" class="menu-item" data-section="A 1381–1470" onclick="recordSection(this)">F 1381–1470</a>
-      <a href="18.html" class="menu-item" data-section="A 1471–1560" onclick="recordSection(this)">F 1471–1560</a>
-      <a href="19.html" class="menu-item" data-section="A 1561–1650" onclick="recordSection(this)">F 1561–1650</a>
-      <a href="20.html" class="menu-item" data-section="A 1651–1740" onclick="recordSection(this)">F 1651–1740</a>
-      <a href="21.html" class="menu-item" data-section="A 1741–1830" onclick="recordSection(this)">F 1741–1830</a>
-      <a href="22.html" class="menu-item" data-section="A 1831–1920" onclick="recordSection(this)">F 1831–1920</a>
-      <a href="23.html" class="menu-item" data-section="A 1921–2027" onclick="recordSection(this)">F 1921–2027</a>
+      <a href="15.html" class="menu-item" data-section="A 1201–1290" onclick="recordSection(this)">A 1201–1290</a>
+      <a href="16.html" class="menu-item" data-section="A 1291–1380" onclick="recordSection(this)">A 1291–1380</a>
+      <a href="17.html" class="menu-item" data-section="A 1381–1470" onclick="recordSection(this)">A 1381–1470</a>
+      <a href="18.html" class="menu-item" data-section="A 1471–1560" onclick="recordSection(this)">A 1471–1560</a>
+      <a href="19.html" class="menu-item" data-section="A 1561–1650" onclick="recordSection(this)">A 1561–1650</a>
+      <a href="20.html" class="menu-item" data-section="A 1651–1740" onclick="recordSection(this)">A 1651–1740</a>
+      <a href="21.html" class="menu-item" data-section="A 1741–1830" onclick="recordSection(this)">A 1741–1830</a>
+      <a href="22.html" class="menu-item" data-section="A 1831–1920" onclick="recordSection(this)">A 1831–1920</a>
+      <a href="23.html" class="menu-item" data-section="A 1921–2027" onclick="recordSection(this)">A 1921–2027</a>
     </div>
 
   </main>
 
 <script>
-/* ══════════════════════════════════════════
-   GLN Portal 連携スクリプト
-   
-   【動作フロー】
-   1. 学生がセクションをタップ
-      → recordSection() がセクション名を sessionStorage に保存
-      → 各ページ（01.html等）に遷移
-   
-   2. 各ページ（01.html等）で学習完了
-      → 各ページが localStorage に完了結果を書き込む
-        キー: 'gln_sisutan_result'
-        値: JSON { section, checkedCount, totalCount, timestamp }
-      → history.back() または index.html に戻る
-   
-   3. index.html がフォーカスを取り戻す（pageshow / focus）
-      → 完了結果を localStorage から読み取る
-      → window.opener.postMessage() で GLN Portal へ送信
-      → localStorage のキーを削除
-   ══════════════════════════════════════════ */
-
 var RESULT_KEY = 'gln_sisutan_result';
 
-/* セクションをタップした時：セクション名を sessionStorage に記録 */
 function recordSection(el) {
   var sectionName = el.getAttribute('data-section') || el.textContent.trim();
   sessionStorage.setItem('gln_sisutan_current_section', sectionName);
 }
 
-/* ページに戻ってきた時（各ページ → index.html）：完了結果を確認して送信 */
 function checkAndSendResult() {
   var resultStr = localStorage.getItem(RESULT_KEY);
   if (!resultStr) return;
@@ -173,10 +104,8 @@ function checkAndSendResult() {
   try { result = JSON.parse(resultStr); } catch(e) { localStorage.removeItem(RESULT_KEY); return; }
   localStorage.removeItem(RESULT_KEY);
 
-  /* 古い結果（10分以上前）は無視 */
   if (!result || !result.timestamp || (Date.now() - result.timestamp > 600000)) return;
 
-  /* 完了済みバッジを表示 */
   var sectionName = result.section || '';
   if (sectionName) {
     document.querySelectorAll('.menu-item').forEach(function(el) {
@@ -186,30 +115,31 @@ function checkAndSendResult() {
     });
   }
 
-  /* GLN Portal（window.opener）へ送信 */
-  if (window.opener && !window.opener.closed) {
-    var detail = result.section || '（セクション不明）';
-    if (result.checkedCount !== undefined && result.totalCount !== undefined) {
-      detail += ' — ' + result.checkedCount + '/' + result.totalCount + '語チェック';
-    }
-    window.opener.postMessage({
-      type:   'GLN_COMPLETE',
-      title:  'シス単例文付きチェックリスト',
-      cat:    'Vocab',
-      detail: detail,
-      words:  350
-    }, '*');
+  var detail = result.section || '（セクション不明）';
+  if (result.checkedCount !== undefined && result.totalCount !== undefined) {
+    detail += ' — ' + result.checkedCount + '/' + result.totalCount + '語チェック';
   }
+
+  var payload = {
+    type:   'GLN_COMPLETE',
+    title:  'シス単例文付きチェックリスト',
+    cat:    'Vocab',
+    detail: detail,
+    words:  350,
+    timestamp: Date.now()
+  };
+
+  // 1. 通常の postMessage
+  if (window.opener && !window.opener.closed) {
+    window.opener.postMessage(payload, '*');
+  }
+  
+  // 2. LocalStorage 経由の強力なフォールバック（iOSタブ切断対策）
+  try { localStorage.setItem('GLN_SYNC_PAYLOAD', JSON.stringify(payload)); } catch(e) {}
 }
 
-/* ページ表示・フォーカス取得時に結果チェック */
-window.addEventListener('pageshow', function(e) {
-  checkAndSendResult();
-});
-window.addEventListener('focus', function() {
-  checkAndSendResult();
-});
-/* 初回表示時にも確認 */
+window.addEventListener('pageshow', function(e) { checkAndSendResult(); });
+window.addEventListener('focus', function() { checkAndSendResult(); });
 checkAndSendResult();
 </script>
 
