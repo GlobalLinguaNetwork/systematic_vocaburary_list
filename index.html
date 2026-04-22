@@ -120,12 +120,18 @@ function checkAndSendResult() {
     detail += ' — ' + result.checkedCount + '/' + result.totalCount + '語チェック';
   }
 
+  // --- 修正箇所: 語数の近似計算 ---
+  // 1単語あたりの平均語数を10語（単語1 + 例文約9語）と想定
+  var AVG_WORDS_PER_ENTRY = 10; 
+  var calculatedWords = (result.checkedCount || 0) * AVG_WORDS_PER_ENTRY;
+  // ------------------------------
+
   var payload = {
     type:   'GLN_COMPLETE',
     title:  'シス単例文付きチェックリスト',
     cat:    'Vocab',
     detail: detail,
-    words:  350,
+    words:  calculatedWords, // 固定値350から計算値に変更
     timestamp: Date.now()
   };
 
