@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>システム英単語 Fundamental 271–360 リスニング (速度調節・一時停止付)</title>
+  <style>
+    :root {
+      --primary-color: #2563eb;
+      --accent-color:  #f59e0b;
+      --bg-color:      #eff6ff;
+      --card-bg:       #ffffff;
+      --text-main:     #1e293b;
+      --text-sub:      #475569;
+      --radius:        16px;
+    }
+
+    body {
+      font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      margin: 0;
+      padding-top: 160px; /* 変更: 120px -> 160px */
+      line-height: 1.6;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.97);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+      z-index: 1000;
+      padding: 8px 0 12px; /* 変更: 6px 0 8px -> 8px 0 12px */
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0 0 2px 0;
+      font-size: 1rem;
+      color: var(--primary-color);
+      letter-spacing: 0.03em;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding: 5px 15px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    /* 追加：速度選択グループのスタイル */
+    .speed-group {
+      display: flex;
+      gap: 4px;
+      background: #e2e8f0;
+      padding: 3px;
+      border-radius: 12px;
+    }
+
+    .btn-rate {
+      background: none;
+      color: var(--text-sub);
+      padding: 4px 10px;
+      font-size: 0.7rem;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+
+    .btn-rate.active {
+      background: white;
+      color: var(--primary-color);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .btn-pause {
+      background: #64748b;
+      color: white;
+    }
+
+    .voice-selector {
+      font-size: 0.8rem;
+      padding: 4px 8px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      background: white;
+      color: var(--text-main);
+    }
+
+    button {
+      border: none;
+      border-radius: 50px;
+      padding: 6px 16px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-play-all { background: var(--primary-color); color: white; }
+    .btn-stop     { background: #ef4444; color: white; }
+    button:hover  { opacity: 0.9; transform: translateY(-1px); }
+
+    .hint-badge {
+      font-size: 0.65rem;
+      color: #94a3b8;
+      text-align: center;
+      display: block;
+      margin: 2px 0 0;
+    }
+
+    .container {
+      max-width: 650px;
+      margin: 0 auto;
+      padding: 0 15px 60px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      margin-bottom: 13px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.08);
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card.playing {
+      border-color: var(--primary-color);
+      background-color: #dbeafe;
+      transform: scale(1.02);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .no {
+      font-size: 0.78rem;
+      color: #64748b;
+      background: #f1f5f9;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+
+    .btn-play-single {
+      background: #f1f5f9;
+      color: var(--primary-color);
+      padding: 5px 11px;
+      font-size: 0.73rem;
+    }
+
+    .headword {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-bottom: 4px;
+      letter-spacing: 0.02em;
+    }
+
+    .en-text {
+      font-size: 0.97rem;
+      color: #1e293b;
+      margin: 3px 0;
+      line-height: 1.5;
+    }
+
+    .details {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, opacity 0.3s ease;
+      opacity: 0;
+    }
+
+    .card.open .details {
+      max-height: 700px;
+      opacity: 1;
+      margin-top: 13px;
+      padding-top: 13px;
+      border-top: 1px dashed #e2e8f0;
+    }
+
+    .ja-meaning {
+      font-size: 0.98rem;
+      color: var(--primary-color);
+      font-weight: 700;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .translations {
+      background: #f8fafc;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 0.84rem;
+      color: #475569;
+      border-left: 4px solid var(--primary-color);
+    }
+
+    .translations p { margin: 4px 0; line-height: 1.55; }
+    .translations .jp { color: #64748b; font-size: 0.82rem; }
+
+    @media print {
+      header { position: static; box-shadow: none; }
+      body   { padding-top: 0; background: #fff; }
+      .controls, .btn-play-single { display: none; }
+      .card  { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
+      .details { max-height: none !important; opacity: 1 !important; }
+    }
+
+    .btn-finish-study {
+      background: #10b981;
+      color: white;
+      width: 100%;
+      max-width: 300px;
+      margin: 30px auto 0;
+      padding: 16px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      transition: opacity 0.2s;
+    }
+    .btn-finish-study:hover { opacity: 0.9; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>シス単 Fundamental — (No.271–360)</h1>
+  
+  <div class="controls">
+    <select id="voiceSelect" class="voice-selector">
+      <option value="en-US">🇺🇸 米国英語 (US)</option>
+      <option value="en-GB">🇬🇧 英国英語 (UK)</option>
+      <option value="en-AU">🇦🇺 豪州英語 (AU)</option>
+      <option value="en-NZ">🇳🇿 ニュージーランド英語 (NZ)</option>
+    </select>
+
+    <!-- 追加：速度選択グループ -->
+    <div class="speed-group" id="speedGroup">
+      <button class="btn-rate" data-rate="0.5">ゆっくり</button>
+      <button class="btn-rate active" data-rate="0.6">標準(100w)</button>
+      <button class="btn-rate" data-rate="0.8">自然</button>
+      <button class="btn-rate" data-rate="1.0">速め</button>
+    </div>
+    
+    <button class="btn-play-all" id="playAllBtn"><span>▶</span> 連続再生</button>
+    <!-- 追加：一時停止ボタン -->
+    <button class="btn-pause" id="pauseBtn" disabled><span>⏸</span> 一時停止</button>
+    <button class="btn-stop"     id="stopBtn"   ><span>■</span> 停止</button>
+  </div>
+  <span class="hint-badge">カードをクリックして和訳・例文訳を確認</span>
+</header>
+
+<main class="container" id="card-container">
+  <button class="btn-finish-study" onclick="finishStudy()">✓ 学習を完了する</button>
+</main>
+
+<script>
+  const data = [
+    { no: "271", word: "complex", ja: "複雑な", examples: [{ en: "The problem is too complex to solve quickly.", jp: "その問題はすぐに解決するには複雑すぎる。" }, { en: "The human brain is a complex system.", jp: "人間の脳は複雑なシステムだ。" }] },
+    { no: "272", word: "willing", ja: "～する気がある、～してもかまわない", examples: [{ en: "She is willing to help anytime.", jp: "彼女はいつでも手助けする気がある。" }, { en: "Are you willing to take on this challenge?", jp: "この挑戦を受ける気がありますか？" }] },
+    { no: "273", word: "current", ja: "最新の、現在の", examples: [{ en: "I am reading the current issue of the magazine.", jp: "私はその雑誌の最新号を読んでいる。" }, { en: "The current price of the product is lower than last year.", jp: "その商品の現在の価格は昨年よりも安い。" }] },
+    { no: "274", word: "male", ja: "男の、オスの", examples: [{ en: "There are more male students in the engineering department.", jp: "工学部には男の学生が多い。" }, { en: "The male lion protects its territory.", jp: "オスのライオンは縄張りを守る。" }] },
+    { no: "275", word: "proper", ja: "適切な", examples: [{ en: "It is important to wear proper clothing for the occasion.", jp: "その場に適した服装を着ることが重要だ。" }, { en: "He gave a proper explanation of the process.", jp: "彼はその過程について適切な説明をした。" }] },
+    { no: "276", word: "capable", ja: "～する能力がある", examples: [{ en: "She is capable of solving complex problems.", jp: "彼女は複雑な問題を解決する能力がある。" }, { en: "The machine is capable of processing large amounts of data.", jp: "その機械は大量のデータを処理することができる。" }] },
+    { no: "277", word: "independent", ja: "独立した", examples: [{ en: "She became financially independent at a young age.", jp: "彼女は若い頃に経済的に自立した。" }, { en: "The country became independent in 1945.", jp: "その国は 1945 年に独立した。" }] },
+    { no: "278", word: "positive", ja: "積極的な、前向きな", examples: [{ en: "She always has a positive attitude.", jp: "彼女はいつも前向きな態度を持っている。" }, { en: "There are many positive effects of regular exercise.", jp: "定期的な運動には多くの良い効果がある。" }] },
+    { no: "279", word: "pleasant", ja: "楽しい、心地よい", examples: [{ en: "The weather was pleasant today.", jp: "今日の天気は快適だった。" }, { en: "We had a pleasant conversation at dinner.", jp: "私たちは夕食時に楽しい会話をした。" }] },
+    { no: "280", word: "significant", ja: "重要な、かなりの", examples: [{ en: "There was a significant change in the economy.", jp: "経済に重要な変化があった。" }, { en: "His contribution was significant to the success of the project.", jp: "彼の貢献はプロジェクトの成功にとって重要だった。" }] },
+    { no: "281", word: "former", ja: "前の、かつての", examples: [{ en: "He is the former president of the company.", jp: "彼はその会社の前社長だ。" }, { en: "I prefer my former job to my current one.", jp: "私は今の仕事より前の仕事の方が好きだ。" }] },
+    { no: "282", word: "chemical", ja: "化学的な", examples: [{ en: "The factory produces chemical products.", jp: "その工場は化学製品を製造している。" }, { en: "Chemical reactions are essential in biology.", jp: "化学反応は生物学において重要だ。" }] },
+    { no: "283", word: "upset", ja: "動揺している、腹を立てた", examples: [{ en: "She was upset after failing the test.", jp: "彼女は試験に落ちて動揺していた。" }, { en: "The bad news upset everyone.", jp: "悪いニュースが皆を動揺させた。" }] },
+    { no: "284", word: "previous", ja: "前の、以前の", examples: [{ en: "I read about this in a previous article.", jp: "私はこれについて以前の記事で読んだ。" }, { en: "The previous owner of the house was very kind.", jp: "その家の前の持ち主はとても親切だった。" }] },
+    { no: "285", word: "calm", ja: "冷静な、穏やかな", examples: [{ en: "She remained calm during the emergency.", jp: "彼女は緊急時でも冷静だった。" }, { en: "The ocean was calm this morning.", jp: "今朝の海は穏やかだった。" }] },
+    { no: "286", word: "specific", ja: "特定の、具体的な", examples: [{ en: "Can you give me a specific example?", jp: "具体的な例を挙げてもらえますか？" }, { en: "The medicine is designed for a specific purpose.", jp: "その薬は特定の目的のために作られている。" }] },
+    { no: "287", word: "conscious", ja: "意識している", examples: [{ en: "He is conscious of his responsibilities.", jp: "彼は自分の責任を認識している。" }, { en: "She was conscious after the accident.", jp: "彼女は事故の後も意識があった。" }] },
+    { no: "288", word: "superior", ja: "よりすぐれている", examples: [{ en: "This new model is superior to the old one.", jp: "この新型は旧型より優れている。" }, { en: "He has a superior sense of strategy.", jp: "彼は優れた戦略的センスを持っている。" }] },
+    { no: "289", word: "efficient", ja: "効率がいい", examples: [{ en: "The new system is more efficient than the old one.", jp: "新しいシステムは旧システムより効率がいい。" }, { en: "He is an efficient worker who completes tasks quickly.", jp: "彼は仕事を素早くこなす効率的な労働者だ。" }] },
+    { no: "290", word: "fundamental", ja: "基本的な、根本的な", examples: [{ en: "Respect is a fundamental part of relationships.", jp: "尊敬は人間関係の基本的な要素だ。" }, { en: "Understanding math is fundamental for studying science.", jp: "数学を理解することは科学を学ぶ上で基本的である。" }] },
+    { no: "291", word: "narrow", ja: "狭い", examples: [{ en: "The road is too narrow for large trucks.", jp: "その道路は大型トラックには狭すぎる。" }, { en: "He has a narrow view of the problem.", jp: "彼はその問題について狭い視野を持っている。" }] },
+    { no: "292", word: "reasonable", ja: "理にかなった、手ごろな", examples: [{ en: "The price of the product is reasonable.", jp: "その商品の価格は合理的だ。" }, { en: "She made a reasonable decision based on the facts.", jp: "彼女は事実に基づいて理にかなった決定を下した。" }] },
+    { no: "293", word: "nervous", ja: "神経質な、不安な", examples: [{ en: "She feels nervous before giving a speech.", jp: "彼女はスピーチの前に緊張している。" }, { en: "He gets nervous when meeting new people.", jp: "彼は新しい人と会うと緊張する。" }] },
+    { no: "294", word: "alike", ja: "似ている", examples: [{ en: "The twins look very alike.", jp: "その双子はとてもよく似ている。" }, { en: "Their ideas are alike in many ways.", jp: "彼らの考えは多くの点で似ている。" }] },
+    { no: "295", word: "domestic", ja: "家庭の、国内の", examples: [{ en: "She enjoys domestic life in the countryside.", jp: "彼女は田舎での家庭生活を楽しんでいる。" }, { en: "Domestic flights are usually cheaper than international ones.", jp: "国内線の航空券は通常、国際線よりも安い。" }] },
+    { no: "296", word: "negative", ja: "否定の、消極的な", examples: [{ en: "He received negative feedback about his work.", jp: "彼は仕事について否定的なフィードバックを受けた。" }, { en: "A negative attitude can affect your success.", jp: "否定的な態度は成功に影響を与える。" }] },
+    { no: "297", word: "moral", ja: "道徳的な", examples: [{ en: "Honesty is a moral value.", jp: "正直は道徳的な価値観の一つだ。" }, { en: "He made a moral decision despite the risks.", jp: "彼はリスクを伴うにもかかわらず道徳的な決定をした。" }] },
+    { no: "298", word: "eager", ja: "熱望している", examples: [{ en: "She is eager to learn new skills.", jp: "彼女は新しいスキルを学ぶことに熱心だ。" }, { en: "The students were eager to participate in the project.", jp: "生徒たちはそのプロジェクトに参加したがっていた。" }] },
+    { no: "299", word: "remarkable", ja: "すばらしい、注目すべき", examples: [{ en: "She has achieved remarkable success in her career.", jp: "彼女はキャリアにおいて素晴らしい成功を収めた。" }, { en: "The sunset was a remarkable sight.", jp: "その夕日は素晴らしい光景だった。" }] },
+    { no: "300", word: "evil", ja: "悪い、邪悪な", examples: [{ en: "The movie portrayed the struggle between good and evil.", jp: "その映画は善と悪の戦いを描いていた。" }, { en: "He believes that greed is an evil trait.", jp: "彼は貪欲は悪い性質だと考えている。" }] },
+    { no: "301", word: "awake", ja: "目を覚まして", examples: [{ en: "She was awake all night because of the storm.", jp: "彼女は嵐のせいで一晩中目を覚ましていた。" }, { en: "He drank coffee to stay awake during the meeting.", jp: "彼は会議中に目を覚ましているためにコーヒーを飲んだ。" }] },
+    { no: "302", word: "aged", ja: "年老いた", examples: [{ en: "He takes care of his aged parents.", jp: "彼は年老いた両親の世話をしている。" }, { en: "The aged tree has stood here for centuries.", jp: "その老木は何世紀もここに立っている。" }] },
+    { no: "303", word: "anxious", ja: "心配して、切望して", examples: [{ en: "She was anxious about her final exam.", jp: "彼女は期末試験のことで心配していた。" }, { en: "He is anxious to start his new job.", jp: "彼は新しい仕事を始めるのを待ち望んでいる。" }] },
+    { no: "304", word: "tough", ja: "たくましい、骨の折れる", examples: [{ en: "He is a tough competitor in the race.", jp: "彼はレースの強敵だ。" }, { en: "The job was tough, but she completed it successfully.", jp: "その仕事は大変だったが、彼女はうまくやり遂げた。" }] },
+    { no: "305", word: "nuclear", ja: "核の、原子力の", examples: [{ en: "The country is discussing nuclear energy policies.", jp: "その国は原子力政策について議論している。" }, { en: "Nuclear weapons pose a global threat.", jp: "核兵器は世界的な脅威をもたらす。" }] },
+    { no: "306", word: "legal", ja: "合法の、法律の", examples: [{ en: "He is studying to become a legal expert.", jp: "彼は法律の専門家になるために勉強している。" }, { en: "The contract is legally binding.", jp: "その契約は法的に拘束力がある。" }] },
+    { no: "307", word: "curious", ja: "好奇心の強い", examples: [{ en: "She is curious about different cultures.", jp: "彼女は異文化に興味を持っている。" }, { en: "The child was curious about how airplanes fly.", jp: "その子供は飛行機が飛ぶ仕組みに興味を持っていた。" }] },
+    { no: "308", word: "civil", ja: "一般市民の", examples: [{ en: "Civil rights are important for every individual.", jp: "市民の権利はすべての個人にとって重要だ。" }, { en: "Civil engineers design roads and bridges.", jp: "土木技師は道路や橋を設計する。" }] },
+    { no: "309", word: "recent", ja: "最近の", examples: [{ en: "She read a recent article about climate change.", jp: "彼女は気候変動に関する最近の記事を読んだ。" }, { en: "The company announced recent changes in its policies.", jp: "その会社は最近の方針変更を発表した。" }] },
+    { no: "310", word: "senior", ja: "上級の、先輩の", examples: [{ en: "He is a senior member of the team.", jp: "彼はチームの上級メンバーだ。" }, { en: "She asked her senior colleague for advice.", jp: "彼女は先輩の同僚に助言を求めた。" }] },
+    { no: "311", word: "afterward", ja: "その後", examples: [{ en: "We had dinner and went to a movie afterward.", jp: "私たちは夕食をとり、その後映画を見に行った。" }, { en: "She felt better afterward.", jp: "彼女はその後気分がよくなった。" }] },
+    { no: "312", word: "nearly", ja: "ほとんど", examples: [{ en: "The project is nearly complete.", jp: "そのプロジェクトはほぼ完成している。" }, { en: "He nearly missed the train.", jp: "彼は危うく電車に乗り遅れるところだった。" }] },
+    { no: "313", word: "therefore", ja: "それゆえに", examples: [{ en: "He was tired, therefore he went to bed early.", jp: "彼は疲れていたので、早く寝た。" }, { en: "She didn’t study enough, therefore she failed the exam.", jp: "彼女は十分に勉強しなかったので、試験に落ちた。" }] },
+    { no: "314", word: "exactly", ja: "正確に", examples: [{ en: "Can you tell me exactly what happened?", jp: "正確に何が起こったのか教えてくれますか？" }, { en: "The map shows exactly where the building is located.", jp: "地図は建物の場所を正確に示している。" }] },
+    { no: "315", word: "possibly", ja: "ひょっとすると、どうしても～できない", examples: [{ en: "I will possibly visit Europe next year.", jp: "ひょっとすると来年ヨーロッパを訪れるかもしれない。" }, { en: "I cannot possibly finish this work by tomorrow.", jp: "どうしてもこの仕事を明日までに終わらせることはできない。" }] },
+    { no: "316", word: "contrary", ja: "反対に", examples: [{ en: "Contrary to popular belief, the product is very effective.", jp: "一般的な考えとは反対に、その商品はとても効果的だ。" }, { en: "The results were contrary to our expectations.", jp: "結果は私たちの期待とは逆だった。" }] },
+    { no: "317", word: "occasionally", ja: "時々", examples: [{ en: "She occasionally visits her grandparents.", jp: "彼女は時々祖父母を訪ねる。" }, { en: "I occasionally go hiking on weekends.", jp: "私は時々週末にハイキングに行く。" }] },
+    { no: "318", word: "somehow", ja: "どういうわけか、なぜか", examples: [{ en: "Somehow, I lost my phone.", jp: "どういうわけか携帯をなくしてしまった。" }, { en: "He somehow managed to solve the problem.", jp: "彼はなんとかその問題を解決した。" }] },
+    { no: "319", word: "seldom", ja: "めったに～ない", examples: [{ en: "He seldom eats fast food.", jp: "彼はめったにファーストフードを食べない。" }, { en: "She seldom watches TV at night.", jp: "彼女は夜にめったにテレビを見ない。" }] },
+    { no: "320", word: "thus", ja: "それゆえ、そのように", examples: [{ en: "The company was losing money, thus they closed some stores.", jp: "会社は赤字だったので、一部の店舗を閉鎖した。" }, { en: "He explained the process clearly, thus everyone understood it.", jp: "彼は手順を明確に説明したので、誰もが理解した。" }] },
+    { no: "321", word: "throughout", ja: "いたる所に、～の間ずっと", examples: [{ en: "She traveled throughout Europe last year.", jp: "彼女は昨年ヨーロッパ中を旅行した。" }, { en: "The flowers bloom throughout the park in spring.", jp: "春になると公園中で花が咲く。" }] },
+    { no: "322", word: "unlike", ja: "～と違って", examples: [{ en: "Unlike his brother, he enjoys sports.", jp: "彼の兄とは違って、彼はスポーツが好きだ。" }, { en: "The weather today is unlike yesterday’s.", jp: "今日の天気は昨日とは異なる。" }] },
+    { no: "323", word: "besides", ja: "～に加えて", examples: [{ en: "Besides English, she speaks French fluently.", jp: "英語に加えて、彼女はフランス語も流暢に話す。" }, { en: "Besides studying, he also works part-time.", jp: "勉強に加えて、彼はアルバイトもしている。" }] },
+    { no: "324", word: "beyond", ja: "～の向こうに；～できる範囲をこえて", examples: [{ en: "The mountains are beyond the river.", jp: "その山々は川の向こうにある。" }, { en: "His skills are beyond my expectations.", jp: "彼のスキルは私の期待を超えている。" }] },
+    { no: "325", word: "within", ja: "～以内で", examples: [{ en: "The store is within walking distance.", jp: "その店は歩いて行ける距離にある。" }, { en: "You must complete the task within two hours.", jp: "あなたは 2 時間以内にその作業を終わらせなければならない。" }] },
+    { no: "326", word: "nor", ja: "～もない", examples: [{ en: "He doesn’t like coffee, nor does he drink tea.", jp: "彼はコーヒーが好きではなく、紅茶も飲まない。" }, { en: "She didn’t attend the meeting, nor did she respond to my email.", jp: "彼女は会議に出席せず、メールにも返信しなかった。" }] },
+    { no: "327", word: "unless", ja: "～しない限り", examples: [{ en: "You won’t pass the test unless you study hard.", jp: "一生懸命勉強しない限り、試験には合格しない。" }, { en: "I won’t go out unless it stops raining.", jp: "雨が止まらない限り、外出しない。" }] },
+    { no: "328", word: "except", ja: "～を除いて", examples: [{ en: "Everyone attended the party except John.", jp: "ジョンを除いて、全員がパーティーに参加した。" }, { en: "The store is open every day except Sunday.", jp: "その店は日曜日を除いて毎日営業している。" }] },
+    { no: "329", word: "ought", ja: "～すべきである", examples: [{ en: "You ought to apologize for your mistake.", jp: "あなたは自分のミスについて謝るべきだ。" }, { en: "We ought to help those in need.", jp: "私たちは困っている人を助けるべきだ。" }] },
+    { no: "330", word: "in spite of", ja: "～にもかかわらず", examples: [{ en: "In spite of the rain, we continued the game.", jp: "雨にもかかわらず、私たちは試合を続けた。" }, { en: "She succeeded in spite of many difficulties.", jp: "彼女は多くの困難にもかかわらず成功した。" }] },
+    { no: "331", word: "whether", ja: "～かどうか、～であろうとなかろうと", examples: [{ en: "I don’t know whether he will come or not.", jp: "彼が来るかどうかわからない。" }, { en: "Whether you like it or not, we have to follow the rules.", jp: "気に入ろうが気に入るまいが、ルールに従わなければならない。" }] },
+    { no: "332", word: "explain", ja: "～を説明する", examples: [{ en: "Can you explain how this machine works?", jp: "この機械の仕組みを説明してくれますか？" }, { en: "She explained the new project to her team.", jp: "彼女は新しいプロジェクトについてチームに説明した。" }] },
+    { no: "333", word: "accept", ja: "～を受け入れる", examples: [{ en: "He accepted the job offer.", jp: "彼はその仕事のオファーを受け入れた。" }, { en: "She accepted the apology with a smile.", jp: "彼女は微笑みながら謝罪を受け入れた。" }] },
+    { no: "334", word: "produce", ja: "～を生産する", examples: [{ en: "This factory produces high-quality furniture.", jp: "この工場は高品質な家具を生産している。" }, { en: "Trees produce oxygen, which is essential for life.", jp: "木は生命に不可欠な酸素を生み出す。" }] },
+    { no: "335", word: "exist", ja: "存在する", examples: [{ en: "Does life exist on other planets?", jp: "他の惑星に生命は存在するのだろうか？" }, { en: "The old tradition still exists in some villages.", jp: "その古い伝統は今もいくつかの村で存在している。" }] },
+    { no: "336", word: "express", ja: "～を表現する", examples: [{ en: "She expressed her feelings through art.", jp: "彼女は芸術を通じて感情を表現した。" }, { en: "He expressed his gratitude to the team.", jp: "彼はチームに感謝の気持ちを表した。" }] },
+    { no: "337", word: "add", ja: "～を加える", examples: [{ en: "Can you add sugar to my coffee?", jp: "私のコーヒーに砂糖を加えてくれますか？" }, { en: "She added a new feature to the app.", jp: "彼女はアプリに新機能を追加した。" }] },
+    { no: "338", word: "avoid", ja: "～を避ける", examples: [{ en: "He avoided talking about the topic.", jp: "彼はその話題について話すことを避けた。" }, { en: "To stay healthy, you should avoid junk food.", jp: "健康を維持するためにジャンクフードは避けるべきだ。" }] },
+    { no: "339", word: "marry", ja: "～と結婚する", examples: [{ en: "She married her childhood friend.", jp: "彼女は幼なじみと結婚した。" }, { en: "They got married last summer.", jp: "彼らは昨年の夏に結婚した。" }] },
+    { no: "340", word: "protect", ja: "～を守る", examples: [{ en: "We must protect the environment for future generations.", jp: "未来の世代のために環境を守らなければならない。" }, { en: "The security guard protects the building at night.", jp: "警備員は夜間に建物を守っている。" }] },
+    { no: "341", word: "affect", ja: "～に影響する", examples: [{ en: "The weather can affect our mood.", jp: "天気は私たちの気分に影響を与える。" }, { en: "Lack of sleep affects concentration.", jp: "睡眠不足は集中力に影響する。" }] },
+    { no: "342", word: "determine", ja: "～を決定する", examples: [{ en: "The test results will determine the next steps.", jp: "テストの結果が次のステップを決定する。" }, { en: "He determined to start his own business.", jp: "彼は自分の会社を始めることを決意した。" }] },
+    { no: "343", word: "solve", ja: "～を解決する", examples: [{ en: "She solved the math problem easily.", jp: "彼女はその数学の問題を簡単に解いた。" }, { en: "Technology helps to solve many everyday problems.", jp: "技術は多くの日常的な問題を解決するのに役立つ。" }] },
+    { no: "344", word: "contain", ja: "～を含んでいる", examples: [{ en: "This box contains old photographs.", jp: "この箱には古い写真が入っている。" }, { en: "The article contains useful information.", jp: "その記事には役に立つ情報が含まれている。" }] },
+    { no: "345", word: "discuss", ja: "～を議論する", examples: [{ en: "We need to discuss our plans for the future.", jp: "私たちは将来の計画について話し合う必要がある。" }, { en: "They discussed the new policy in the meeting.", jp: "彼らは会議で新しい方針について議論した。" }] },
+    { no: "346", word: "ignore", ja: "～を無視する", examples: [{ en: "He ignored my message.", jp: "彼は私のメッセージを無視した。" }, { en: "You shouldn’t ignore safety warnings.", jp: "安全警告を無視すべきではない。" }] },
+    { no: "347", word: "guess", ja: "～を推測する", examples: [{ en: "Can you guess what’s inside the box?", jp: "箱の中に何が入っているか推測できますか？" }, { en: "He guessed the correct answer.", jp: "彼は正しい答えを当てた。" }] },
+    { no: "348", word: "exchange", ja: "交換する", examples: [{ en: "They exchanged gifts at the party.", jp: "彼らはパーティーで贈り物を交換した。" }, { en: "She exchanged money at the bank.", jp: "彼女は銀行でお金を両替した。" }] },
+    { no: "349", word: "satisfy", ja: "～を満たす", examples: [{ en: "The meal satisfied his hunger.", jp: "その食事は彼の空腹を満たした。" }, { en: "The job does not satisfy her expectations.", jp: "その仕事は彼女の期待を満たしていない。" }] },
+    { no: "350", word: "complain", ja: "苦情を言う", examples: [{ en: "He complained about the poor service.", jp: "彼はサービスの悪さについて不満を言った。" }, { en: "She complained that her room was too cold.", jp: "彼女は部屋が寒すぎると文句を言った。" }] },
+    { no: "351", word: "achieve", ja: "～を達成する", examples: [{ en: "She achieved her goal of becoming a doctor.", jp: "彼女は医者になるという目標を達成した。" }, { en: "Hard work helps people achieve success.", jp: "努力は人が成功を達成するのに役立つ。" }] },
+    { no: "352", word: "enable", ja: "～を可能にする", examples: [{ en: "Technology enables us to communicate easily.", jp: "技術は私たちが簡単にコミュニケーションを取ることを可能にする。" }, { en: "The new system enables faster processing.", jp: "新しいシステムはより迅速な処理を可能にする。" }] },
+    { no: "353", word: "intent", ja: "～するつもりだ", examples: [{ en: "She intends to study abroad next year.", jp: "彼女は来年海外留学するつもりだ。" }, { en: "I intend to finish this project by Friday.", jp: "私はこのプロジェクトを金曜日までに終わらせるつもりだ。" }] },
+    { no: "354", word: "obtain", ja: "～を得る", examples: [{ en: "He obtained a visa to travel to the U.S.", jp: "彼はアメリカへの旅行のためにビザを取得した。" }, { en: "You need to obtain permission before entering.", jp: "入場する前に許可を得る必要がある。" }] },
+    { no: "355", word: "divide", ja: "分割する", examples: [{ en: "We divided the cake into four pieces.", jp: "私たちはケーキを 4 つに分けた。" }, { en: "The river divides the city into two parts.", jp: "その川は都市を 2 つの地域に分けている。" }] },
+    { no: "356", word: "annoy", ja: "～をいらいらさせる", examples: [{ en: "His loud music annoys the neighbors.", jp: "彼の大音量の音楽は近所の人をいらいらさせる。" }, { en: "She was annoyed by his constant interruptions.", jp: "彼の度重なる邪魔に彼女はいらいらした。" }] },
+    { no: "357", word: "differ", ja: "異なる", examples: [{ en: "Their opinions differ on the issue.", jp: "その問題について彼らの意見は異なる。" }, { en: "The two designs differ in color and shape.", jp: "その 2 つのデザインは色と形が異なる。" }] },
+    { no: "358", word: "educate", ja: "～を教育する", examples: [{ en: "Schools educate children about history.", jp: "学校は子供たちに歴史を教える。" }, { en: "Parents should educate their children about safety.", jp: "親は子供に安全について教育すべきだ。" }] },
+    { no: "359", word: "borrow", ja: "～を借りる", examples: [{ en: "She borrowed a book from the library.", jp: "彼女は図書館から本を借りた。" }, { en: "Can I borrow your pen for a moment?", jp: "ちょっとペンを貸してくれますか？" }] },
+    { no: "360", word: "invent", ja: "～を発明する", examples: [{ en: "Thomas Edison invented the light bulb.", jp: "トーマス・エジソンは電球を発明した。" }, { en: "He is trying to invent a new type of battery.", jp: "彼は新しい種類の電池を発明しようとしている。" }] }
+  ];
+
+  const container = document.getElementById('card-container');
+  data.forEach((item, index) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.id = `card-${index}`;
+    card.onclick = (e) => { if (!e.target.classList.contains('btn-play-single')) card.classList.toggle('open'); };
+    const exHtml = item.examples.map(ex => `<p>${ex.en}</p><p class="jp">${ex.jp}</p>`).join('');
+    card.innerHTML = `
+      <div class="card-header"><span class="no">${item.no}</span><button class="btn-play-single" onclick="playSingle(${index})">🔊 再生</button></div>
+      <div class="headword">${item.word}</div>
+      <div class="en-text">${item.examples[0].en}</div>
+      <div class="en-text">${item.examples[1].en}</div>
+      <div class="details"><span class="ja-meaning">${item.ja}</span><div class="translations">${exHtml}</div></div>
+    `;
+    container.insertBefore(card, container.lastElementChild);
+  });
+
+  const synth = window.speechSynthesis;
+  let currentPlayIndex = -1;
+  let isPlayingAll = false;
+  let voices = [];
+
+  // 追加：変数定義
+  let isPaused = false;
+  let currentRate = 0.6;
+
+  function loadVoices() { voices = synth.getVoices(); }
+  loadVoices();
+  if (speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = loadVoices;
+
+  function speakText(text, onEnd) {
+    synth.cancel();
+    const utt = new SpeechSynthesisUtterance(text);
+    const targetLang = document.getElementById('voiceSelect').value;
+    let v = voices.find(v => v.lang.startsWith(targetLang));
+    if (!v) v = voices.find(v => v.lang.startsWith('en'));
+    if (v) utt.voice = v;
+    utt.lang = targetLang;
+    utt.rate = currentRate; // 変更: currentRateを適用
+    if (onEnd) utt.onend = onEnd;
+    synth.speak(utt);
+  }
+
+  function getSpokenText(item) { return item.word + '. ' + item.examples[0].en + '. ' + item.examples[1].en + '.'; }
+  function updateHighlights(index) {
+    document.querySelectorAll('.card').forEach((card, i) => {
+      card.classList.toggle('playing', i === index);
+      if (i === index) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  }
+  function playNext() {
+    if (!isPlayingAll) return;
+    if (isPaused) return; // 一時停止中は次へ進まない
+    currentPlayIndex++;
+    if (currentPlayIndex >= data.length) { stopAll(); return; }
+    updateHighlights(currentPlayIndex);
+    speakText(getSpokenText(data[currentPlayIndex]), playNext);
+  }
+  function stopAll() { 
+    isPlayingAll = false; 
+    isPaused = false;
+    synth.cancel(); 
+    updateHighlights(-1); 
+    
+    // ボタン状態のリセット
+    const pauseBtn = document.getElementById('pauseBtn');
+    pauseBtn.disabled = true;
+    pauseBtn.innerHTML = '<span>⏸</span> 一時停止';
+  }
+
+  // 追加：一時停止/再開機能
+  function togglePause() {
+    const pauseBtn = document.getElementById('pauseBtn');
+    if (!isPaused) {
+      // 一時停止処理
+      isPaused = true;
+      synth.cancel();
+      pauseBtn.innerHTML = '<span>▶</span> 再開';
+    } else {
+      // 再開処理
+      isPaused = false;
+      pauseBtn.innerHTML = '<span>⏸</span> 一時停止';
+      if (currentPlayIndex !== -1) {
+        updateHighlights(currentPlayIndex);
+        speakText(getSpokenText(data[currentPlayIndex]), playNext);
+      }
+    }
+  }
+
+  window.playSingle = function(index) { stopAll(); updateHighlights(index); speakText(getSpokenText(data[index])); };
+  
+  document.getElementById('playAllBtn').addEventListener('click', () => { 
+    isPlayingAll = true; 
+    isPaused = false;
+    currentPlayIndex = -1; 
+    document.getElementById('pauseBtn').disabled = false; // 一時停止ボタンを有効化
+    playNext(); 
+  });
+  
+  document.getElementById('stopBtn').addEventListener('click', stopAll);
+  document.getElementById('pauseBtn').addEventListener('click', togglePause);
+
+  // 追加：速度切替機能
+  document.getElementById('speedGroup').addEventListener('click', (e) => {
+    if (e.target.classList.contains('btn-rate')) {
+      document.querySelectorAll('.btn-rate').forEach(btn => btn.classList.remove('active'));
+      e.target.classList.add('active');
+      currentRate = parseFloat(e.target.dataset.rate);
+      
+      // 再生中の場合は即座に反映させるため、現在の単語を再読み上げ
+      if (isPlayingAll && !isPaused && currentPlayIndex !== -1) {
+        speakText(getSpokenText(data[currentPlayIndex]), playNext);
+      }
+    }
+  });
+
+  function finishStudy() {
+    if (typeof stopAll === 'function') stopAll();
+    var sectionName = sessionStorage.getItem('gln_sisutan_current_section') || 'シス単チェック 学習完了';
+    var payload = {
+      type:   'GLN_COMPLETE',
+      title:  'シス単例文付きチェックリスト',
+      cat:    'Vocab',
+      detail: sectionName,
+      words:  350,
+      timestamp: Date.now()
+    };
+    if (window.opener && !window.opener.closed) {
+      window.opener.postMessage(payload, '*');
+    }
+    try { 
+      localStorage.setItem('GLN_SYNC_PAYLOAD', JSON.stringify(payload)); 
+      localStorage.setItem('gln_sisutan_result', JSON.stringify({
+        section: sectionName,
+        timestamp: Date.now()
+      }));
+    } catch(e) {}
+    alert('「' + sectionName + '」の学習完了を記録しました！');
+    window.location.href = 'index.html';
+  }
+</script>
+</body>
+</html>

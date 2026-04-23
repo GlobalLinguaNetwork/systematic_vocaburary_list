@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>シス単 Fundamental 1831–1920 リスニング</title>
+  <style>
+    :root {
+      --primary-color: #2563eb;
+      --accent-color:  #f59e0b;
+      --bg-color:      #eff6ff;
+      --card-bg:       #ffffff;
+      --text-main:     #1e293b;
+      --text-sub:      #475569;
+      --radius:        16px;
+    }
+
+    body {
+      font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      margin: 0;
+      padding-top: 160px;
+      line-height: 1.6;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.97);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+      z-index: 1000;
+      padding: 8px 0 12px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0 0 2px 0;
+      font-size: 1rem;
+      color: var(--primary-color);
+      letter-spacing: 0.03em;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding: 5px 15px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .speed-group {
+      display: flex;
+      gap: 4px;
+      background: #e2e8f0;
+      padding: 3px;
+      border-radius: 50px;
+    }
+
+    .btn-rate {
+      background: transparent;
+      color: #64748b;
+      font-size: 0.7rem;
+      padding: 4px 8px;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-rate.active {
+      background: white;
+      color: var(--primary-color);
+      font-weight: 700;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .btn-pause { background: #f59e0b; color: white; }
+
+    .voice-selector {
+      font-size: 0.8rem;
+      padding: 4px 8px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      background: white;
+      color: var(--text-main);
+    }
+
+    button {
+      border: none;
+      border-radius: 50px;
+      padding: 6px 16px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center; gap: 5px;
+    }
+
+    .btn-play-all { background: var(--primary-color); color: white; }
+    .btn-stop     { background: #ef4444; color: white; }
+    button:hover  { opacity: 0.9; transform: translateY(-1px); }
+    button:disabled { background: #cbd5e1; cursor: not-allowed; transform: none; }
+
+    .hint-badge {
+      font-size: 0.65rem;
+      color: #94a3b8;
+      text-align: center;
+      display: block;
+      margin: 2px 0 0;
+    }
+
+    .container {
+      max-width: 650px;
+      margin: 0 auto;
+      padding: 0 15px 60px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      margin-bottom: 13px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.08);
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card.playing {
+      border-color: var(--primary-color);
+      background-color: #dbeafe;
+      transform: scale(1.02);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .no {
+      font-size: 0.78rem;
+      color: #64748b;
+      background: #f1f5f9;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+
+    .btn-play-single {
+      background: #f1f5f9;
+      color: var(--primary-color);
+      padding: 5px 11px;
+      font-size: 0.73rem;
+    }
+
+    .headword {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-bottom: 4px;
+      letter-spacing: 0.02em;
+    }
+
+    .en-text {
+      font-size: 0.97rem;
+      color: #1e293b;
+      margin: 3px 0;
+      line-height: 1.5;
+    }
+
+    .details {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, opacity 0.3s ease;
+      opacity: 0;
+    }
+
+    .card.open .details {
+      max-height: 1000px;
+      opacity: 1;
+      margin-top: 13px;
+      padding-top: 13px;
+      border-top: 1px dashed #e2e8f0;
+    }
+
+    .ja-meaning {
+      font-size: 0.98rem;
+      color: var(--primary-color);
+      font-weight: 700;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .translations {
+      background: #f8fafc;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 0.84rem;
+      color: #475569;
+      border-left: 4px solid var(--primary-color);
+    }
+
+    .translations p { margin: 4px 0; line-height: 1.55; }
+    .translations .jp { color: #64748b; font-size: 0.82rem; }
+
+    .btn-finish-study {
+      background: #10b981;
+      color: white;
+      width: 100%;
+      max-width: 300px;
+      margin: 30px auto 0;
+      padding: 16px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      transition: opacity 0.2s;
+    }
+    .btn-finish-study:hover { opacity: 0.9; }
+
+    @media print {
+      header { position: static; box-shadow: none; }
+      body   { padding-top: 0; background: #fff; }
+      .controls, .btn-play-single { display: none; }
+      .card  { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
+      .details { max-height: none !important; opacity: 1 !important; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>シス単 Fundamental — (No.1831–1920)</h1>
+  
+  <div class="controls">
+    <select id="voiceSelect" class="voice-selector">
+      <option value="en-US">🇺🇸 米国英語 (US)</option>
+      <option value="en-GB">🇬🇧 英国英語 (UK)</option>
+      <option value="en-AU">🇦🇺 豪州英語 (AU)</option>
+      <option value="en-NZ">🇳🇿 ニュージーランド英語 (NZ)</option>
+    </select>
+    
+    <div class="speed-group" id="speedGroup">
+      <button class="btn-rate" data-rate="0.5">ゆっくり</button>
+      <button class="btn-rate active" data-rate="0.6">標準(100w)</button>
+      <button class="btn-rate" data-rate="0.8">自然</button>
+      <button class="btn-rate" data-rate="1.0">速め</button>
+    </div>
+
+    <button class="btn-play-all" id="playAllBtn"><span>▶</span> 連続再生</button>
+    <button class="btn-pause" id="pauseBtn" disabled><span>⏸</span> 一時停止</button>
+    <button class="btn-stop"     id="stopBtn"   ><span>■</span> 停止</button>
+  </div>
+  <span class="hint-badge">カードをクリックして和訳・例文訳を確認</span>
+</header>
+
+<main class="container" id="card-container"></main>
+
+<script>
+  const data = [
+    { no: "1831", word: "hierarchy", ja: "階級制度、ヒエラルキー", examples: [{ en: "There is a strict hierarchy in the military.", jp: "軍隊には厳格な階級制度があります。" }, { en: "The company has a very rigid corporate hierarchy.", jp: "その会社は非常に厳格な企業階層を持っています。" }] },
+    { no: "1832", word: "toll", ja: "通行料金、死傷者数", examples: [{ en: "You have to pay a toll to cross this bridge.", jp: "この橋を渡るには通行料金を支払わなければなりません。" }, { en: "The death toll from the accident has risen to ten.", jp: "その事故による死者数は 10 人に増加しました。" }] },
+    { no: "1833", word: "transaction", ja: "取引", examples: [{ en: "All financial transactions are recorded in the accounts.", jp: "すべての金融取引は、会社の会計に記録されます。" }, { en: "The real estate transaction was completed last week.", jp: "その不動産取引は先週完了しました。" }] },
+    { no: "1834", word: "burglar", ja: "強盗", examples: [{ en: "A burglar broke into our house while we were away.", jp: "私たちが休暇中に、強盗が家に押し入りました。" }, { en: "The police caught the burglar as he was trying to escape.", jp: "警察は逃げようとしていた強盗を捕まえました。" }] },
+    { no: "1835", word: "tyranny", ja: "圧政、専制政治", examples: [{ en: "The people rose up against the king's tyranny.", jp: "人々は王の圧政に対して立ち上がりました。" }, { en: "He fought against the tyranny of the new regime.", jp: "彼は新政権の圧政と戦いました。" }] },
+    { no: "1836", word: "parasite", ja: "寄生生物、厄介者", examples: [{ en: "Fleas are parasites that live on cats and dogs.", jp: "ノミは猫や犬に寄生する生物です。" }, { en: "He's a parasite who lives off his wealthy parents.", jp: "彼は裕福な両親に頼って生活する厄介者です。" }] },
+    { no: "1837", word: "intuition", ja: "直感", examples: [{ en: "My intuition told me that something was wrong.", jp: "何かがおかしいと私の直感が告げていました。" }, { en: "She has a strong intuition about people.", jp: "彼女は人に対して鋭い直感を持っています。" }] },
+    { no: "1838", word: "communist", ja: "共産主義の、共産主義者", examples: [{ en: "The country was ruled by a communist government.", jp: "その国は長年、共産主義政府によって統治されていました。" }, { en: "He was a committed communist for most of his life.", jp: "彼は人生のほとんどを熱心な共産主義者として過ごしました。" }] },
+    { no: "1839", word: "legacy", ja: "遺産", examples: [{ en: "She received a small legacy from her grandmother.", jp: "彼女は祖母からわずかな遺産を受け取りました。" }, { en: "The former president left a lasting legacy of peace.", jp: "その元大統領は、平和と繁栄という永続的な遺産を残しました。" }] },
+    { no: "1840", word: "vein", ja: "静脈、（話などの）調子", examples: [{ en: "The nurse had trouble finding a vein in his arm.", jp: "看護師は彼の腕の静脈を見つけるのに苦労しました。" }, { en: "He continued his speech in a more serious vein.", jp: "彼はより真面目な調子でスピーチを続けました。" }] },
+    { no: "1841", word: "discourse", ja: "言説、論説", examples: [{ en: "She is an expert in the discourse of political speeches.", jp: "彼女は政治演説の言説の専門家です。" }, { en: "The book is a learned discourse on the history of art.", jp: "その本は美術史に関する学術的な論説です。" }] },
+    { no: "1842", word: "dairy", ja: "乳製品、酪農の", examples: [{ en: "I'm trying to cut down on dairy products.", jp: "私は牛乳やチーズのような乳製品を減らそうとしています。" }, { en: "He works on a dairy farm.", jp: "彼は酪農場で働いています。" }] },
+    { no: "1843", word: "artifact", ja: "人工遺物、工芸品", examples: [{ en: "The museum has a collection of ancient Egyptian artifacts.", jp: "その博物館は古代エジプトの工芸品のコレクションを所蔵しています。" }, { en: "The archaeologists excavated the historical artifacts.", jp: "考古学者たちはその歴史的遺物を慎重に発掘しました。" }] },
+    { no: "1844", word: "outlet", ja: "排出口、（感情の）はけ口、直販店", examples: [{ en: "The factory has an outlet pipe that releases waste water.", jp: "その工場には廃水を川に放出する排出口があります。" }, { en: "Writing poetry is a great outlet for her emotions.", jp: "詩を書くことは、彼女の感情の素晴らしいはけ口です。" }] },
+    { no: "1845", word: "apprehension", ja: "不安、懸念、逮捕", examples: [{ en: "He looked at the door with some apprehension.", jp: "彼はいくらか不安げにドアを見ました。" }, { en: "The police made an apprehension for the robbery.", jp: "警察はその強盗事件に関連して逮捕者を出しました。" }] },
+    { no: "1846", word: "melancholy", ja: "憂鬱、物悲しい", examples: [{ en: "A feeling of melancholy settled over him.", jp: "過去を思うと、彼は憂鬱な気分に沈みました。" }, { en: "The music had a sad and melancholy tune.", jp: "その音楽は悲しく物悲しい曲調でした。" }] },
+    { no: "1847", word: "novelty", ja: "目新しさ、目新しい小物", examples: [{ en: "The novelty of living in a new city soon wore off.", jp: "新しい街に住むという目新しさはすぐに薄れました。" }, { en: "The shop sells all kinds of fun novelties.", jp: "その店はあらゆる種類の楽しい小物やお土産を売っています。" }] },
+    { no: "1848", word: "specimen", ja: "標本、検体", examples: [{ en: "The scientist collected a specimen of the rare plant.", jp: "その科学者は珍しい植物の標本を採集しました。" }, { en: "The doctor sent a blood specimen to the lab.", jp: "医者は検査のために血液の検体を研究室に送りました。" }] },
+    { no: "1849", word: "hygiene", ja: "衛生", examples: [{ en: "Good personal hygiene is important for staying healthy.", jp: "健康を維持するためには、個人の良好な衛生状態が重要です。" }, { en: "The restaurant had poor food hygiene standards.", jp: "そのレストランは、食品の衛生基準が低かったため、閉鎖されました。" }] },
+    { no: "1850", word: "tactics", ja: "戦術", examples: [{ en: "The team needs to change its tactics to win.", jp: "そのチームが試合に勝ちたいのであれば、戦術を変える必要があります。" }, { en: "The general was a master of military tactics.", jp: "その将軍は軍事戦術の達人でした。" }] },
+    { no: "1851", word: "monopoly", ja: "独占", examples: [{ en: "The company has a virtual monopoly on the market.", jp: "その会社は、この製品の市場で事実上の独占をしています。" }, { en: "The government passed a law to prevent monopolies.", jp: "政府は独占の形成を防ぐための法律を可決しました。" }] },
+    { no: "1852", word: "token", ja: "しるし、代用硬貨", examples: [{ en: "Please accept this small gift as a token of appreciation.", jp: "私たちの感謝のしるしとして、このささやかな贈り物を受け取ってください。" }, { en: "You need a token to use the washing machine.", jp: "コインランドリーの洗濯機を使うには、トークン（代用硬貨）を買う必要があります。" }] },
+    { no: "1853", word: "aristocracy", ja: "貴族階級", examples: [{ en: "The French Revolution led to the downfall of the aristocracy.", jp: "フランス革命は貴族階級の没落につながりました。" }, { en: "Many members of the aristocracy lost their wealth.", jp: "貴族階級の多くのメンバーは、戦後、富と土地を失いました。" }] },
+    { no: "1854", word: "revenge", ja: "復讐", examples: [{ en: "He swore to get revenge on the men who wronged him.", jp: "彼は自分に不当な仕打ちをした男たちへの復讐を誓いました。" }, { en: "She is seeking revenge for her father's murder.", jp: "彼女は父親殺しの復讐を求めています。" }] },
+    { no: "1855", word: "activist", ja: "活動家", examples: [{ en: "She's a prominent human rights activist.", jp: "彼女は著名な人権活動家です。" }, { en: "Activists are protesting the new factory.", jp: "活動家たちは新しい工場に抗議しています。" }] },
+    { no: "1856", word: "rhetoric", ja: "美辞麗句、修辞学", examples: [{ en: "The politician's speech was just empty rhetoric.", jp: "その政治家の演説は、ただの空虚な美辞麗句でした。" }, { en: "His powerful rhetoric convinced the audience.", jp: "彼の力強い言葉遣い（レトリック）は聴衆を納得させました。" }] },
+    { no: "1857", word: "entrepreneur", ja: "起業家", examples: [{ en: "He's a successful tech entrepreneur.", jp: "彼は成功したテクノロジー起業家です。" }, { en: "The government offers grants to young entrepreneurs.", jp: "政府は若い起業家に助成金を提供しています。" }] },
+    { no: "1858", word: "census", ja: "国勢調査", examples: [{ en: "The national census is conducted every ten years.", jp: "国勢調査は 10 年ごとに行われます。" }, { en: "The latest census shows the population has grown.", jp: "最新の国勢調査によると、その都市の人口は増加しています。" }] },
+    { no: "1859", word: "verge", ja: "寸前、瀬戸際", examples: [{ en: "She was on the verge of tears.", jp: "彼女は泣き出す寸前でした。" }, { en: "The company is on the verge of a breakthrough.", jp: "その会社は画期的な進歩の瀬戸際にあります。" }] },
+    { no: "1860", word: "advent", ja: "出現、降臨節", examples: [{ en: "The advent of the internet revolutionized communication.", jp: "インターネットの出現はコミュニケーションに革命をもたらしました。" }, { en: "Advent is the season before Christmas.", jp: "降臨節（アドベント）はクリスマスの前の季節です。" }] },
+    { no: "1861", word: "analogy", ja: "類推、たとえ", examples: [{ en: "The teacher used a camera as an analogy for the eye.", jp: "その教師は、目のたとえとしてカメラを使いました。" }, { en: "He drew an analogy between computers and brains.", jp: "彼はコンピューターと脳の間に類推を引きました。" }] },
+    { no: "1862", word: "irrigation", ja: "灌漑（かんがい）", examples: [{ en: "The farmers built a new irrigation system.", jp: "農家の人々は、作物に水をやるために新しい灌漑システムを建設しました。" }, { en: "Proper irrigation is essential for agriculture.", jp: "乾燥地域での農業には、適切な灌漑が不可欠です。" }] },
+    { no: "1863", word: "coverage", ja: "報道、（保険の）補償範囲", examples: [{ en: "The news channel provided extensive coverage of the election.", jp: "そのニュースチャンネルは、選挙について広範囲にわたる報道をしました。" }, { en: "Does your insurance provide coverage for flood damage?", jp: "あなたの保険契約は、洪水被害に対する補償を提供していますか？" }] },
+    { no: "1864", word: "cuisine", ja: "料理", examples: [{ en: "I love trying international cuisine, especially Thai.", jp: "私は世界各国の料理、特にタイ料理とイタリア料理を試すのが大好きです。" }, { en: "The restaurant is famous for its French cuisine.", jp: "そのレストランはフランス料理で有名です。" }] },
+    { no: "1865", word: "menace", ja: "脅威、厄介者", examples: [{ en: "Drunk driving is a serious menace to public safety.", jp: "飲酒運転は公共の安全に対する深刻な脅威です。" }, { en: "My little brother can be a real menace when bored.", jp: "私の弟は退屈していると、本当に厄介者になることがあります。" }] },
+    { no: "1866", word: "peril", ja: "危険", examples: [{ en: "The sailors knew they were in great peril.", jp: "嵐が近づくにつれ船員たちは自分たちが大きな危険にさらされていることを知っていました。" }, { en: "He was unaware of the perils that lay ahead.", jp: "彼は旅の先に待ち受ける危険に気づいていませんでした。" }] },
+    { no: "1867", word: "limb", ja: "四肢、（木の）大枝", examples: [{ en: "The doctors had to amputate his lower limb.", jp: "事故の後、医者たちは彼の下肢を切断しなければなりませんでした。" }, { en: "A strong wind broke a large limb from the oak tree.", jp: "強い風が古いオークの木から大きな枝を折りました。" }] },
+    { no: "1868", word: "assault", ja: "暴行、（言葉による）攻撃", examples: [{ en: "He was charged with assault for attacking a man.", jp: "彼は別の男性を攻撃したとして暴行罪で起訴されました。" }, { en: "The politician faced a verbal assault from reporters.", jp: "その政治家はスキャンダルを巡って記者たちから言葉による猛攻撃を受けました。" }] },
+    { no: "1869", word: "hatred", ja: "憎悪", examples: [{ en: "The war was fueled by years of ethnic hatred.", jp: "その戦争は長年の民族的憎悪によって煽られました。" }, { en: "She felt a deep hatred for the person who betrayed her.", jp: "彼女は自分を裏切った人物に対して深い憎しみを抱きました。" }] },
+    { no: "1870", word: "autonomy", ja: "自主性、自治権", examples: [{ en: "The new curriculum gives teachers more autonomy.", jp: "新しいカリキュラムは教師により多くの自主性を与えます。" }, { en: "The region was granted greater autonomy.", jp: "その地域にはより大きな自治権が与えられました。" }] },
+    { no: "1871", word: "cram", ja: "塾、詰め込み勉強", examples: [{ en: "Many students attend cram schools for exams.", jp: "多くの生徒が大学受験のために塾（進学塾）に通います。" }, { en: "She crammed all night for her history test.", jp: "彼女は歴史の試験のために一晩中詰め込み勉強をしました。" }] },
+    { no: "1872", word: "subsidy", ja: "補助金、助成金", examples: [{ en: "The government provides subsidies to farmers.", jp: "政府は農家に補助金を提供しています。" }, { en: "The housing project is funded by a government subsidy.", jp: "その住宅プロジェクトは政府の補助金によって資金供給されています。" }] },
+    { no: "1873", word: "empathy", ja: "共感、感情移入", examples: [{ en: "A good leader needs empathy.", jp: "優れたリーダーには共感（思いやり）が必要です。" }, { en: "She felt great empathy for the homeless man.", jp: "彼女はホームレスの男性に大きな共感を覚えました。" }] },
+    { no: "1874", word: "slang", ja: "俗語（スラング）", examples: [{ en: "'Cool' is a common slang word.", jp: "「クール」は一般的な俗語です。" }, { en: "Local slang can be hard for non-native speakers.", jp: "地元のスラングは、母語話者でない人には理解しにくいことがあります。" }] },
+    { no: "1875", word: "posture", ja: "（体の）姿勢、（心の）態度", examples: [{ en: "Sitting all day can cause poor posture.", jp: "一日中座っていると、姿勢が悪くなることがあります。" }, { en: "The company took an aggressive posture toward its rivals.", jp: "その会社は競合他社に対して攻撃的な姿勢（態度）を取りました。" }] },
+    { no: "1876", word: "ideology", ja: "イデオロギー、思想", examples: [{ en: "The two political parties have different ideologies.", jp: "その二つの政党は異なるイデオロギーを持っています。" }, { en: "His art was influenced by his political ideology.", jp: "彼の芸術は彼の政治的思想に影響を受けていました。" }] },
+    { no: "1877", word: "curse", ja: "災いの元、呪いの言葉", examples: [{ en: "The lack of funding was a curse on the project.", jp: "資金不足がそのプロジェクトの災いの元でした。" }, { en: "He muttered a curse when he hit his thumb.", jp: "彼は親指を打ったとき、呪いの言葉（毒づき）をつぶやきました。" }] },
+    { no: "1878", word: "tumor", ja: "腫瘍", examples: [{ en: "Doctors found a benign tumor in her lung.", jp: "医師たちは彼女の肺にがん性ではない良性の腫瘍を見つけました。" }, { en: "The malignant tumor required immediate treatment.", jp: "その悪性の腫瘍は即時の治療が必要でした。" }] },
+    { no: "1879", word: "intersection", ja: "交差点", examples: [{ en: "A car crashed at the Main and Oak intersection.", jp: "メインストリートとオークストリートの交差点で車が衝突しました。" }, { en: "Turn right at the next intersection.", jp: "次の交差点を右に曲がってください。" }] },
+    { no: "1880", word: "duration", ja: "期間、持続", examples: [{ en: "The flight's duration is about three hours.", jp: "そのフライトの所要時間（持続時間）は約 3 時間です。" }, { en: "You have access for the course's duration.", jp: "あなたはその講座の期間中、教材にアクセスできます。" }] },
+    { no: "1881", word: "deforestation", ja: "森林伐採", examples: [{ en: "Deforestation is a major cause of climate change.", jp: "森林伐採は気候変動の主要な原因です。" }, { en: "Clearing land for agriculture drives deforestation.", jp: "農業のための土地開墾が森林伐採を進行させます。" }] },
+    { no: "1882", word: "precaution", ja: "予防策、慎重さ", examples: [{ en: "As a precaution, back up your important files.", jp: "予防策として、重要なファイルはバックアップしてください。" }, { en: "They closed the school as a flu precaution.", jp: "彼らはインフルエンザの予防策として学校を閉鎖しました。" }] },
+    { no: "1883", word: "bunch", ja: "（花などの）束、（人の）一団", examples: [{ en: "He gave her a bunch of roses.", jp: "彼は彼女にバラの花束を贈りました。" }, { en: "A bunch of my friends are going to the concert.", jp: "私の友達の一団がそのコンサートに行きます。" }] },
+    { no: "1884", word: "shortcoming", ja: "欠点、短所", examples: [{ en: "The new software has a few shortcomings.", jp: "その新しいソフトウェアにはいくつかの欠点があります。" }, { en: "He is aware of his shortcomings.", jp: "彼は自身の欠点を認識しており、改善しようと努めています。" }] },
+    { no: "1885", word: "aspiration", ja: "熱望、大望", examples: [{ en: "She has aspirations to be a doctor.", jp: "彼女には医者になりたいという大望があります。" }, { en: "His main aspiration is to travel the world.", jp: "彼の主な願望（熱望）は世界を旅することです。" }] },
+    { no: "1886", word: "psychiatrist", ja: "精神科医", examples: [{ en: "A psychiatrist can prescribe medication.", jp: "精神科医は精神的な健康のために薬を処方することができます。" }, { en: "He saw a psychiatrist for his anxiety.", jp: "彼は不安のために精神科医の診察を受けました。" }] },
+    { no: "1887", word: "shipping", ja: "送料、海運", examples: [{ en: "The item costs $50, plus $5 for shipping.", jp: "その商品の価格は 50 ドルで、送料に加えて 5 ドルかかります。" }, { en: "The global shipping industry is vital for trade.", jp: "世界の海運業界は貿易にとって不可欠です。" }] },
+    { no: "1888", word: "senator", ja: "上院議員", examples: [{ en: "The senator voted against the tax bill.", jp: "その上院議員は税法案に反対票を投じました。" }, { en: "She was elected as a junior senator.", jp: "彼女は下位の上院議員に選出されました。" }] },
+    { no: "1889", word: "statesman", ja: "（優れた）政治家", examples: [{ en: "Churchill is remembered as a great statesman.", jp: "チャーチルは偉大な政治家として記憶されています。" }, { en: "A true statesman puts the country's needs first.", jp: "真の政治家は国のニーズを最優先します。" }] },
+    { no: "1890", word: "subordinate", ja: "部下、下位の", examples: [{ en: "A good manager delegates to subordinates.", jp: "優れた管理者は部下に仕事を任せます。" }, { en: "He was always respectful to his subordinates.", jp: "彼は常に部下に対して敬意を払っていました。" }] },
+    { no: "1891", word: "vacuum", ja: "空白（状態）、電気掃除機、掃除機をかける", examples: [{ en: "His resignation created a power vacuum.", jp: "彼の辞任は権力の空白を生み出しました。" }, { en: "I need to vacuum the carpet.", jp: "私はカーペットに掃除機をかける必要があります。" }] },
+    { no: "1892", word: "quest", ja: "探求", examples: [{ en: "He went on a quest for the lost city of gold.", jp: "彼は失われた黄金の都を探求する旅に出ました。" }, { en: "Her quest for knowledge led her to top universities.", jp: "彼女の知識探求は彼女をトップクラスの大学へと導きました。" }] },
+    { no: "1893", word: "meditation", ja: "瞑想", examples: [{ en: "She meditates 15 minutes daily to calm her mind.", jp: "彼女は心を落ち着かせるために毎日 15 分間瞑想します。" }, { en: "Meditation can help reduce stress and improve focus.", jp: "瞑想はストレスを軽減し、集中力を高めるのに役立ちます。" }] },
+    { no: "1894", word: "subscriber", ja: "購読者、（チャンネル）登録者", examples: [{ en: "The magazine has over a million subscribers.", jp: "その雑誌には 100 万人以上の購読者がいます。" }, { en: "YouTube creators earn money based on subscribers.", jp: "YouTube のクリエイターはチャンネル登録者数に基づいて収益を得ます。" }] },
+    { no: "1895", word: "riddle", ja: "なぞなぞ", examples: [{ en: "The sphinx was famous for its riddle.", jp: "スフィンクスはそのなぞなぞで有名でした。" }, { en: "I can't solve this difficult riddle.", jp: "私はこの難しいなぞなぞを解くことができません。" }] },
+    { no: "1896", word: "rag", ja: "ぼろきれ、ぼろ服、貧乏", examples: [{ en: "She used an old rag to wipe up the spilled milk.", jp: "彼女はこぼれた牛乳を拭くために古いぼろきれを使いました。" }, { en: "His story is a classic rags-to-riches tale.", jp: "彼の物語は、貧乏から大金持ちになった典型的な成功物語です。" }] },
+    { no: "1897", word: "rust", ja: "さび、（腕などが）なまる", examples: [{ en: "The old iron gate was covered in rust.", jp: "その古い鉄の門はさびで覆われていました。" }, { en: "My Spanish is rusty because I haven't practiced.", jp: "私のスペイン語は何年も練習していないので、少しなまっています。" }] },
+    { no: "1898", word: "sanitation", ja: "公衆衛生", examples: [{ en: "Good sanitation is essential to prevent disease.", jp: "病気の蔓延を防ぐためには、良好な公衆衛生が不可欠です。" }, { en: "The city's sanitation department collects trash.", jp: "その市の衛生局はゴミ収集を担当しています。" }] },
+    { no: "1899", word: "midst", ja: "真っ只中", examples: [{ en: "He found himself in the midst of an argument.", jp: "彼は激しい議論の真っ只中にいることに気づきました。" }, { en: "In the midst of chaos, she remained calm.", jp: "あらゆる混乱の真っ只中で、彼女は冷静を保っていました。" }] },
+    { no: "1900", word: "mischief", ja: "いたずら", examples: [{ en: "The children were always getting into mischief.", jp: "子供たちはいつもいたずらをしていました。" }, { en: "There was a look of mischief in her eyes.", jp: "彼女がいたずらを計画していたとき、その目にはいたずらっぽい輝きがありました。" }] },
+    { no: "1901", word: "proficiency", ja: "熟達度、技能", examples: [{ en: "He passed the Language Proficiency Test.", jp: "彼は言語能力（熟達度）試験に合格しました。" }, { en: "She has a high level of proficiency in writing.", jp: "彼女は会話と筆記の両方で高い熟達度を持っています。" }] },
+    { no: "1902", word: "recollection", ja: "記憶、思い出すこと", examples: [{ en: "I have a clear recollection of meeting him.", jp: "去年彼に会ったことははっきりと記憶しています。" }, { en: "To the best of my recollection, the keys are here.", jp: "私の記憶（思い出せる限り）では、鍵は台所のカウンターの上にあります。" }] },
+    { no: "1903", word: "latitude", ja: "緯度、裁量（権）", examples: [{ en: "New York City is at a latitude of 40 degrees north.", jp: "ニューヨーク市は北緯約 40 度に位置しています。" }, { en: "My boss gives me a lot of latitude.", jp: "私の上司は、私がどのようにプロジェクトを管理するかについて、多くの裁量権を与えてくれます。" }] },
+    { no: "1904", word: "friction", ja: "摩擦、不和", examples: [{ en: "The friction between the tires and the road helps.", jp: "タイヤと道路の間の摩擦が、車の停止を助けます。" }, { en: "There was a lot of friction between the colleagues.", jp: "その二人の同僚の間には多くの不和（摩擦）がありました。" }] },
+    { no: "1905", word: "botanist", ja: "植物学者", examples: [{ en: "A botanist specializes in the study of plants.", jp: "植物学者とは、植物の研究を専門とする科学者のことです。" }, { en: "The botanist discovered a new species of flower.", jp: "その植物学者はアマゾンの熱帯雨林で新種の花を発見しました。" }] },
+    { no: "1906", word: "heredity", ja: "遺伝", examples: [{ en: "Eye color is determined by heredity.", jp: "目の色は遺伝によって決まります。" }, { en: "The study of heredity is a key part of genetics.", jp: "遺伝の研究は遺伝学の重要な部分です。" }] },
+    { no: "1907", word: "contempt", ja: "軽蔑", examples: [{ en: "He showed his contempt for the law.", jp: "彼は新しい法律を公然と無視することで、それに対する軽蔑を示しました。" }, { en: "She felt nothing but contempt for his behavior.", jp: "彼女は彼の臆病な行動に対して軽蔑しか感じませんでした。" }] },
+    { no: "1908", word: "anatomy", ja: "解剖学、構造（分析）", examples: [{ en: "Medical students spend time studying human anatomy.", jp: "医学生は人体の解剖学を学ぶのに多くの時間を費やします。" }, { en: "The book analyzes the anatomy of a failed business.", jp: "その本は失敗したビジネスの構造を分析しています。" }] },
+    { no: "1909", word: "integrity", ja: "誠実さ、完全性", examples: [{ en: "He is known for his honesty and moral integrity.", jp: "彼はその正直さと道徳的な誠実さで知られています。" }, { en: "Engineers checked the structural integrity of the bridge.", jp: "地震の後、技術者たちは橋の構造的な完全性をチェックしました。" }] },
+    { no: "1910", word: "cargo", ja: "貨物", examples: [{ en: "The ship was carrying a cargo of valuable goods.", jp: "その船は貴重品の貨物を運んでいました。" }, { en: "The cargo plane was loaded with medical supplies.", jp: "その貨物機には医療品が積まれていました。" }] },
+    { no: "1911", word: "bribe", ja: "賄賂", examples: [{ en: "The politician was accused of accepting a bribe.", jp: "その政治家は賄賂を受け取ったとして告発されました。" }, { en: "He refused to pay a bribe to get the contract.", jp: "彼はその契約を得るために賄賂を支払うことを拒否しました。" }] },
+    { no: "1912", word: "eruption", ja: "噴火、（感情などの）噴出", examples: [{ en: "The eruption of the volcano forced evacuations.", jp: "その火山の噴火により、何千人もの人々が避難を余儀なくされました。" }, { en: "There was a sudden eruption of laughter.", jp: "静かな図書館で突然笑いがどっと（噴出するように）起こりました。" }] },
+    { no: "1913", word: "funeral", ja: "葬式", examples: [{ en: "Many people attended the funeral to pay respects.", jp: "多くの人々が弔意を表すためにその葬式に参列しました。" }, { en: "The funeral service will be held on Saturday.", jp: "告別式は土曜日に行われます。" }] },
+    { no: "1914", word: "deficit", ja: "赤字、欠乏", examples: [{ en: "The government is trying to reduce the national deficit.", jp: "政府は国の赤字を削減しようとしています。" }, { en: "A vitamin deficiency can lead to health problems.", jp: "ビタミン欠乏（不足）は健康問題につながる可能性があります。" }] },
+    { no: "1915", word: "bulk", ja: "大部分、大量", examples: [{ en: "The bulk of the work will be completed next week.", jp: "仕事の大部分は来週完了する予定です。" }, { en: "Buying in bulk is often cheaper.", jp: "まとめ買い（大量買い）をする方がしばしば安上がりです。" }] },
+    { no: "1916", word: "millionaire", ja: "百万長者", examples: [{ en: "He became a millionaire by starting his own company.", jp: "彼は自身の成功した会社を立ち上げて百万長者になりました。" }, { en: "She dreams of becoming a millionaire and traveling.", jp: "彼女は百万長者になって世界中を旅することを夢見ています。" }] },
+    { no: "1917", word: "ash", ja: "灰", examples: [{ en: "After the fire, the house was reduced to ash.", jp: "火事の後、その家は灰になりました。" }, { en: "The volcanic ash covered the nearby towns.", jp: "火山灰が近隣の町を覆いました。" }] },
+    { no: "1918", word: "realm", ja: "王国、領域", examples: [{ en: "The king ruled over a vast and prosperous realm.", jp: "その王は広大で繁栄した王国を統治しました。" }, { en: "This topic is outside the realm of my expertise.", jp: "この話題は私の専門領域外です。" }] },
+    { no: "1919", word: "plantation", ja: "プランテーション、大農園", examples: [{ en: "He worked on a large tea plantation in Sri Lanka.", jp: "彼はスリランカの広大な茶のプランテーションで働いていました。" }, { en: "The historic plantation is now a museum.", jp: "その歴史的なプランテーションは現在、博物館になっています。" }] },
+    { no: "1920", word: "plow", ja: "鋤（すき）、耕す、除雪車", examples: [{ en: "The farmer used a plow to prepare the soil.", jp: "その農家は植え付けのために土を準備するのに鋤を使いました。" }, { en: "The snowplow worked all night to clear the roads.", jp: "除雪車は道路を除雪するために一晩中働きました。" }] }
+  ];
+
+  const container = document.getElementById('card-container');
+  let currentPlayIndex = -1;
+  let isPlayingAll = false;
+  let isPaused = false;
+  let currentRate = 0.6;
+  const synth = window.speechSynthesis;
+  let voices = [];
+
+  // 初期化
+  data.forEach((item, index) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.id = `card-${index}`;
+    card.onclick = (e) => { if (!e.target.classList.contains('btn-play-single')) card.classList.toggle('open'); };
+    const exHtml = item.examples.map(ex => `<p>${ex.en}</p><p class="jp">${ex.jp}</p>`).join('');
+    card.innerHTML = `
+      <div class="card-header"><span class="no">${item.no}</span><button class="btn-play-single" onclick="playSingle(${index})">🔊 再生</button></div>
+      <div class="headword">${item.word}</div>
+      <div class="en-text">${item.examples[0].en}</div>
+      <div class="en-text">${item.examples[1].en}</div>
+      <div class="details"><span class="ja-meaning">${item.ja}</span><div class="translations">${exHtml}</div></div>
+    `;
+    container.appendChild(card);
+  });
+
+  // 速度変更設定
+  document.querySelectorAll('.btn-rate').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      document.querySelectorAll('.btn-rate').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      currentRate = parseFloat(e.target.getAttribute('data-rate'));
+    });
+  });
+
+  function loadVoices() { voices = synth.getVoices(); }
+  loadVoices();
+  if (speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = loadVoices;
+
+  function speakText(text, onEnd) {
+    synth.cancel();
+    const utt = new SpeechSynthesisUtterance(text);
+    const targetLang = document.getElementById('voiceSelect').value;
+    let v = voices.find(v => v.lang.startsWith(targetLang));
+    if (!v) v = voices.find(v => v.lang.startsWith('en'));
+    if (v) utt.voice = v;
+    utt.lang = targetLang;
+    utt.rate = currentRate;
+    if (onEnd) utt.onend = onEnd;
+    synth.speak(utt);
+  }
+
+  function getSpokenText(item) {
+    const clean = (str) => str.replace(/<\/?[^>]+(>|$)/g, "");
+    return item.word + '. ' + clean(item.examples[0].en) + '. ' + clean(item.examples[1].en) + '.';
+  }
+
+  function updateHighlights(index) {
+    document.querySelectorAll('.card').forEach((card, i) => {
+      card.classList.toggle('playing', i === index);
+      if (i === index) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  }
+
+  function playNext() {
+    if (!isPlayingAll) return;
+    currentPlayIndex++;
+    if (currentPlayIndex >= data.length) { stopAll(); return; }
+    updateHighlights(currentPlayIndex);
+    speakText(getSpokenText(data[currentPlayIndex]), playNext);
+  }
+
+  function stopAll() {
+    isPlayingAll = false;
+    isPaused = false;
+    synth.cancel();
+    updateHighlights(-1);
+    document.getElementById('pauseBtn').disabled = true;
+    document.getElementById('pauseBtn').innerHTML = '<span>⏸</span> 一時停止';
+  }
+
+  function togglePause() {
+    const pauseBtn = document.getElementById('pauseBtn');
+    if (!isPaused) {
+      isPaused = true;
+      synth.cancel();
+      pauseBtn.innerHTML = '<span>▶</span> 再開';
+    } else {
+      isPaused = false;
+      pauseBtn.innerHTML = '<span>⏸</span> 一時停止';
+      speakText(getSpokenText(data[currentPlayIndex]), playNext);
+    }
+  }
+
+  window.playSingle = function(index) {
+    stopAll();
+    currentPlayIndex = index;
+    updateHighlights(index);
+    speakText(getSpokenText(data[index]));
+  };
+
+  document.getElementById('playAllBtn').addEventListener('click', () => {
+    isPlayingAll = true;
+    currentPlayIndex = -1;
+    isPaused = false;
+    document.getElementById('pauseBtn').disabled = false;
+    playNext();
+  });
+
+  document.getElementById('pauseBtn').addEventListener('click', togglePause);
+  document.getElementById('stopBtn').addEventListener('click', stopAll);
+
+  function finishStudy() {
+    if (typeof stopAll === 'function') stopAll();
+    var sectionName = sessionStorage.getItem('gln_sisutan_current_section') || 'シス単チェック 学習完了';
+    var payload = { type: 'GLN_COMPLETE', title: 'シス単例文付きチェックリスト', cat: 'Vocab', detail: sectionName, words: 350, timestamp: Date.now() };
+    if (window.opener && !window.opener.closed) window.opener.postMessage(payload, '*');
+    try { localStorage.setItem('GLN_SYNC_PAYLOAD', JSON.stringify(payload)); } catch(e) {}
+    alert('「' + sectionName + '」の学習完了を記録しました！');
+    window.location.href = 'index.html';
+  }
+</script>
+
+<div class="container" style="text-align: center; padding-top: 0;">
+  <button class="btn-finish-study" onclick="finishStudy()">✓ 学習を完了する</button>
+</div>
+
+</body>
+</html>
